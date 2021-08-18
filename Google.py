@@ -29,7 +29,7 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes):
             flow = InstalledAppFlow.from_client_config(
                 client_config = 
                 {
-                    {
+
                         "web":
                         {
                         "client_id":os.getenv("client_id"),
@@ -40,7 +40,7 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes):
                         "client_secret":os.getenv("client_secret")
                         }
                     }
-                }
+
             )
             cred = flow.run_local_server()
 
