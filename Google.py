@@ -38,9 +38,10 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes):
                         "token_uri":"https://oauth2.googleapis.com/token",
                         "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
                         "client_secret":os.getenv("client_secret"),
-                        "scopes": SCOPES
+                       
                         }
-                    }
+                    },
+                scopes=SCOPES
 
             )
             cred = flow.run_local_server()
