@@ -39,7 +39,7 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes):
                         "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
                         "client_secret":os.getenv("client_secret"),
                         "callback_url": "https://juvenile-discordbot.herokuapp.com/auth/google",
-                        "proxy": true
+                        "proxy": "true"
                         }
                     },
                 scopes=SCOPES
