@@ -1,6 +1,6 @@
 from discord.ext import commands
 import os
-#From keep_alive import keep_alive
+From keep_alive import keep_alive
 
 #Import and load all files
 
@@ -29,5 +29,5 @@ for filename in os.listdir('./cogs'):
   if filename.endswith('py'):
     client.load_extension(f'cogs.{filename[:-3]}')
     
-# keep_alive()
+keep_alive()
 client.run(os.getenv('discord_token'))
