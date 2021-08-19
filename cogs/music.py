@@ -41,8 +41,8 @@ class Music(commands.Cog):
     async def play(self, ctx, *, songname):
         await ctx.send("Gimme a sec...")
         try:
-            videosSearch = VideosSearch(songname, limit=1)
-            result = SimpleNamespace(**videosSearch.result())
+            video_search = VideosSearch(songname, limit=1)
+            result = SimpleNamespace(**video_search.result())
             url = result.result[0]['link']
             img = result.result[0]['thumbnails'][1]['url']
             player = music.get_player(guild_id=ctx.guild.id)
@@ -172,8 +172,8 @@ class Music(commands.Cog):
     async def search(self, ctx, n=3, *, keyword):
       search_q.clear()
       search_q_img.clear()
-      videosSearch = VideosSearch(keyword, limit=n)
-      result = SimpleNamespace(**videosSearch.result()).result
+      video_search = VideosSearch(keyword, limit=n)
+      result = SimpleNamespace(**video_search.result()).result
       try:
         for i in range(0, len(result)):
             img = result[i]['thumbnails'][1]['url']
