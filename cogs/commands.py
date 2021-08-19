@@ -35,14 +35,14 @@ class Commands(commands.Cog):
     else:
       await ctx.send('Arghh, the database is not functioning, please give me some time, I will try to fix this ASAP')
 
-  # @commands.command()
-  # async def change(self, ctx, key, *,val): 
-  #   _id = "_" + str(ctx.message.guild.id)
-  #   if not note.check_table(_id, key):
-  #     await ctx.send(key + ' This key does not exist, use command `note` to create note')
-  #   else:
-  #     note.change_note(_id, key, val)
-  #     await ctx.send('Overridden note')
+  @commands.command()
+  async def change(self, ctx, key, *,val): 
+    _id = "_" + str(ctx.message.guild.id)
+    if not note.check_table(_id, key):
+      await ctx.send(key + ' This key does not exist, use command `note` to create note')
+    else:
+      note.change_note(_id, key, val)
+      await ctx.send('Overridden note')
   @commands.command()
   async def notes(self, ctx):
     _id = "_" + str(ctx.message.guild.id)
