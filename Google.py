@@ -43,7 +43,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes):
 
             )
             cred = flow.run_local_server()
-            flow.redirect_uri = "https://juvenile-discordbot.herokuapp.com/"
+            flow.redirect_uri = "https://juvenile-discordbot.herokuapp.com"
         with open(pickle_file, 'wb') as token:
             pickle.dump(cred, token)
 
