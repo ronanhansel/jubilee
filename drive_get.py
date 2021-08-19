@@ -23,7 +23,7 @@ def create(folder):
             'mimeType': 'application/vnd.google-apps.folder',
             'parents' : [folder_id]
             }
-            file = service.files().create(body=file_metadata, supportsAllDrives=True, fields='id').execute()
+            service.files().create(body=file_metadata, supportsAllDrives=True, fields='id').execute()
           return
       else: 
         file_metadata = {
