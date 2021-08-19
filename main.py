@@ -1,8 +1,22 @@
 from discord.ext import commands
 import os
 from app_placeholder import tracker
+from flask import Flask 
+
+  
+
+app = Flask(__name__) 
+  
+@app.route("/") 
+
+def home_view(): 
+  return "<h1>Welcome to Juvenile's placeholder</h1>"
+
 
 #Import and load all files
+
+
+
 client = commands.Bot(command_prefix= "-")
 client.remove_command('remove')
 @client.command(hidden=True)
