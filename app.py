@@ -1,15 +1,33 @@
-from flask import Flask
-from threading import Thread
+from discord.ext import commands
+import os
+from keep_alive import keep_alive
 
-app = Flask('')
+#Import and load all files
 
-@app.route('/')
-def home():
-    return "Hello. I am alive!"
+client = commands.Bot(command_prefix= "-")
+client.remove_command('remove')
+@client.command(hidden=True)
+@commands.is_owner()
+async def load(ctx, extension):
+  client.load_extension(f'cogs.{extension}')
+  await ctx.send(f'Loaded: {extension}')
+  
+@client.command(hidden=True)
+@commands.is_owner()
+async def unload(ctx, extension):
+  client.unload_extension(f'cogs.{extension}')
+  await ctx.send(f'Unloaded: {extension}')
 
-def run():
-  app.run(host='0.0.0.0',port=8080)
+@client.command(hidden=True)
+@commands.is_owner()
+async def reload(ctx, extension):
+  client.unload_extension(f'cogs.{extension}')
+  client.load_extension(f'cogs.{extension}')
+  await ctx.send(f'Reloaded: {extension}')
 
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
+for filename in os.listdir('./cogs'):
+  if filename.endswith('py'):
+    client.load_extension(f'cogs.{filename[:-3]}')
+    
+keep_alive()
+client.run(os.getenv('discord_token'))
