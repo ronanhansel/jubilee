@@ -1,4 +1,4 @@
-from Google import Create_Service
+from Google import create_service
 import os
 
 CLIENT_SECRET = 'credentials.json'
@@ -6,7 +6,7 @@ API_NAME = 'drive'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/drive']
 DEFAULT_ID = os.getenv('DRIVE_DEFAULT_ID')
-service = Create_Service(CLIENT_SECRET, API_NAME, API_VERSION, SCOPES)
+service = create_service(CLIENT_SECRET, API_NAME, API_VERSION, SCOPES)
 
 def create(folder):
     folders = folder.split("/")
