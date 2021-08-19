@@ -1,6 +1,6 @@
 from discord.ext import commands
 import os
-from keep_alive import keep_alive
+from app import keep_alive
 
 #Import and load all files
 
