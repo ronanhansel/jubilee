@@ -55,14 +55,14 @@ class Commands(commands.Cog):
     except Exception as e:
       await ctx.send(e)
       await ctx.send('Empty notes')
-  # @commands.command()
-  # async def forget(self, ctx, key):
-  #   _id = "_" + str(ctx.message.guild.id)
-  #   if not note.check_table(_id, key):
-  #     await ctx.send(key + ' This key does not exist, use command `note` to create note')
-  #   else:
-  #     note.remove_note(_id, key)
-  #     await ctx.send('Ooops i forgot it')
+  @commands.command()
+  async def forget(self, ctx, key):
+    _id = "_" + str(ctx.message.guild.id)
+    if not note.check_table(_id, key):
+      await ctx.send(key + ' This key does not exist, use command `note` to create note')
+    else:
+      note.remove_note(_id, key)
+      await ctx.send('Ooops i forgot it')
   
   
   @commands.command()
