@@ -13,7 +13,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes):
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
     print(SCOPES)
-    absoluteuri = "https://juvenile-discordbot.herokuapp.com"
+    credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
     cred = None
 
     pickle_file = f'token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
@@ -26,23 +26,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes):
         if cred and cred.expired and cred.refresh_token:
             cred.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_config(
-                client_config = 
-                {
-                        "web":
-                        {
-                        "client_id":os.getenv("client_id"),
-                        "project_id":os.getenv("project_id"),
-                        "auth_uri":"https://accounts.google.com/o/oauth2/auth",
-                        "token_uri":"https://oauth2.googleapis.com/token",
-                        "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
-                        "client_secret":os.getenv("client_secret"),    
-                        "callbackURL": absoluteuri + "/auth/google/callback"
-                        }
-                    },
-                scopes=SCOPES
-
-            )
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_json, scopes=SCOPES)
             cred = flow.run_local_server()
             flow.redirect_uri = "https://juvenile-discordbot.herokuapp.com"
         with open(pickle_file, 'wb') as token:
