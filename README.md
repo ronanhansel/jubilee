@@ -3,7 +3,7 @@
 A small side project I develop and maintain in my free time.
 Join Discord Server? I'd be surprised if anyone showed up 👀
 
-![Invitation](https://invidget.switchblade.xyz/HGfGKJFk "Click mE!!!")
+[![Support Server](https://invidget.switchblade.xyz/Cru4EVGM)](https://discord.gg/Cru4EVGM)
 # Instructions
 ## Environment:
 `Python >= 3.8`
