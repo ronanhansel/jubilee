@@ -20,6 +20,8 @@ class Music(commands.Cog):
     async def join(self, ctx):
         try:
             await ctx.author.voice.channel.connect()
+        except discord.ClientException: 
+            await ctx.send("I'm already in...")
         except AttributeError:
             await ctx.send("You have to join a voice channel first")
 
@@ -71,7 +73,8 @@ class Music(commands.Cog):
                     await ctx.send("Aight, try again")
                 except AttributeError:
                     await ctx.send("You have to join a voice channel first")
-        except:
+        except Exception as e:
+            print(e)
             await ctx.send('Error, try another keyword or song')
 
     @commands.command()

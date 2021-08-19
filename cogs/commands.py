@@ -28,7 +28,7 @@ class Commands(commands.Cog):
           note.insert_note(_id, key, val)
           await ctx.send('Got it!')
         else: await ctx.send('Note existed, to change value use `change`')
-      except Exception as e:
+      except Exception:
         note.create_table(_id)
         await ctx.send('I have just created a storage for this server, try again')
     else:
@@ -52,8 +52,7 @@ class Commands(commands.Cog):
         line += '\t' + '>' + i
         line += '\n'
       await ctx.send(line)
-    except Exception as e:
-      await ctx.send(e)
+    except Exception:
       await ctx.send('Empty notes')
   @commands.command()
   async def forget(self, ctx, key):
