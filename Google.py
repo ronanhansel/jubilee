@@ -13,7 +13,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes):
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
     print(SCOPES)
-
+    absoluteuri = "https://juvenile-discordbot.herokuapp.com"
     cred = None
 
     pickle_file = f'token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
@@ -37,6 +37,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes):
                         "token_uri":"https://oauth2.googleapis.com/token",
                         "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
                         "client_secret":os.getenv("client_secret"),    
+                        "callbackURL": absoluteuri + "/auth/google/callback"
                         }
                     },
                 scopes=SCOPES
