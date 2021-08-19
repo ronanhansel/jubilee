@@ -1,6 +1,6 @@
 from discord.ext import commands
 import os
-from app_placeholder import tracker
+#from app_placeholder import tracker
 from flask import Flask 
 
   
@@ -42,5 +42,5 @@ for filename in os.listdir('./cogs'):
   if filename.endswith('py'):
     client.load_extension(f'cogs.{filename[:-3]}')
 
-tracker()
+#tracker()
 client.run(os.getenv('discord_token'))
