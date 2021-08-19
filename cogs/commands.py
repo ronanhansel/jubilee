@@ -1,52 +1,69 @@
+import os
 import discord
 from discord.ext import commands
+from discord.ext.commands.core import check
 import requests
-from replit import db
+import json
+import data.note
+
+
+note = data.note
 
 class Commands(commands.Cog):
   def __init__ (self, client):
     self.client = client
   #Commands
 
-  @commands.command(aliases=['meme'])
-  async def get_meme(self, ctx):
+  @commands.command()
+  async def meme(self, ctx):
         data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
         await ctx.send(data["memes"][0]["url"])
 
-  @commands.command(aliases=['save'])
-  async def add_note(self, ctx, key, *, val):
-    if key not in db.keys():
-      db[key] = val
-      await ctx.send('Added note')
-
+  @commands.command()
+  async def note(self, ctx, key, *, val):
+    _id = "_" + str(ctx.message.guild.id)
+    if os.path.exists('data/note.db'):
+      try:
+        if not note.check_table(_id, key)[0]:
+          note.insert_note(_id, key, val)
+          await ctx.send('Got it!')
+        else: await ctx.send('Note existed, to change value use `change`')
+      except Exception as e:
+        note.create_table(_id)
+        await ctx.send(e)
+        await ctx.send('I have just created a storage for this server, try again')
     else:
-      await ctx.send(key + ' Key existed, if you want to override, use command `-override`')
+      await ctx.send('Arghh, the database is not functioning, please give me some time, I will try to fix this ASAP')
 
-  @commands.command(aliases=['override'])
-  async def override_note(self, ctx, key, *,val): 
-    if key not in db.keys():
-      await ctx.send(key + ' This key does not exist, use command `-save` to create note')
-    else:
-      db[key] = val
-      await ctx.send('Overridden note')
+  # @commands.command()
+  # async def change(self, ctx, key, *,val): 
+  #   _id = "_" + str(ctx.message.guild.id)
+  #   if not note.check_table(_id, key):
+  #     await ctx.send(key + ' This key does not exist, use command `note` to create note')
+  #   else:
+  #     note.change_note(_id, key, val)
+  #     await ctx.send('Overridden note')
   @commands.command()
   async def notes(self, ctx):
+    _id = "_" + str(ctx.message.guild.id)
     try:
       line = "Soooo, here are the notes I remember, to use them, type '>key': \n"
-      for i in sorted(db.keys()):
+      keys = [i[0] for i in note.get_note_all(_id)]
+      for i in sorted(keys):
         line += '\t' + '>' + i
         line += '\n'
       await ctx.send(line)
-    except:
+    except Exception as e:
+      await ctx.send(e)
       await ctx.send('Empty notes')
-  @commands.command(aliases=['remove'])
-  async def remove_note(self, ctx, key):
-    if key in db.keys():
-      del db[key]
-      await ctx.send('Removed note')
-
-    else:
-      await ctx.send('I can\'t find that note, typo?')
+  # @commands.command()
+  # async def forget(self, ctx, key):
+  #   _id = "_" + str(ctx.message.guild.id)
+  #   if not note.check_table(_id, key):
+  #     await ctx.send(key + ' This key does not exist, use command `note` to create note')
+  #   else:
+  #     note.remove_note(_id, key)
+  #     await ctx.send('Ooops i forgot it')
   
   
   @commands.command()

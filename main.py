@@ -1,7 +1,5 @@
-import json
 from discord.ext import commands
 import os
-
 
 #Import and load all files
 client = commands.Bot(command_prefix= "-")

@@ -1,16 +1,14 @@
 import discord
-import time
 from discord.ext import commands
-from replit import db
 
 class Admins(commands.Cog):
   def __init__(self, client):
     self.client = client
-  try:
-    admin = db['admin']
-  except Exception as e: 
-    admin = 'Bee boo peep'
-    print(e)
+  # try:
+  #   admin = db['admin']
+  # except Exception as e: 
+  admin = 'Bee boo peep'
+    # print(e)
   #For admins
   @commands.command()
   @commands.has_role(admin)
