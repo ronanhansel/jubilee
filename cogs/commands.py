@@ -30,7 +30,6 @@ class Commands(commands.Cog):
         else: await ctx.send('Note existed, to change value use `change`')
       except Exception as e:
         note.create_table(_id)
-        await ctx.send(e)
         await ctx.send('I have just created a storage for this server, try again')
     else:
       await ctx.send('Arghh, the database is not functioning, please give me some time, I will try to fix this ASAP')
