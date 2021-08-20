@@ -132,3 +132,4 @@ dmypy.json
 *.bak
 token.json
 *.db
+test.py

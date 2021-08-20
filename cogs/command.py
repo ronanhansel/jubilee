@@ -43,13 +43,16 @@ class Command(commands.Cog):
     async def notes(self, ctx, option='me'):
         if option == 'server':
             _id = "_s" + str(ctx.message.guild.id)
+            _prefix = "."
             
-        else: _id = "_" + str(ctx.message.author.id)
+        else: 
+            _id = "_" + str(ctx.message.author.id)
+            _prefix = ">"
         try:
             line = "Soooo, here are the notes I remember, to use them, type '>key': \n"
             keys = [i[0] for i in note.get_note_all(_id)]
             for i in sorted(keys):
-                line += '\t' + '>' + i
+                line += '\t' + _prefix + i
                 line += '\n'
             await ctx.send(line)
         except Exception:
