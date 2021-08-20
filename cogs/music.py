@@ -57,6 +57,8 @@ class Music(commands.Cog):
                                                  ffmpeg_error_betterfix=True)
                 if not ctx.voice_client.is_playing():
                     await player.queue(url, search=True)
+                    await player.play()
+                    await ctx.send("Playing")
                     channel_name = result.result[0]['channel']['name']
                     embed = discord.Embed(title=f'**{title[:title.index("by")]}**',
                                           description=f'{view} - {channel_name}')
@@ -64,9 +66,11 @@ class Music(commands.Cog):
                     embed.set_thumbnail(url=img)
                     await ctx.send(embed=embed)
                 else:
-                    song = await player.queue(url, search=True)
-                    embed = discord.Embed(title=f'Queued **{song.name}**',
-                                          description='As your request')
+                    await player.queue(url, search=True)
+                    await ctx.send("Queued")
+                    channel_name = result.result[0]['channel']['name']
+                    embed = discord.Embed(title=f'**{title[:title.index("by")]}**',
+                                          description=f'{view} - {channel_name}')
                     embed.set_author(name='YouTube')
                     embed.set_thumbnail(url=img)
                     await ctx.send(embed=embed)
@@ -82,7 +86,7 @@ class Music(commands.Cog):
             print(e)
             await ctx.send('Error, try another keyword or song')
 
-    @commands.command(help="Pause currently playing music")
+    @commands.command(help="Pause currently playing song")
     async def pause(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -91,7 +95,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Resume currently playing music")
+    @commands.command(help="Resume currently playing song")
     async def resume(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -100,7 +104,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Stop currently playing music")
+    @commands.command(help="Stop currently playing song")
     async def stop(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -109,7 +113,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Loop currently playing music")
+    @commands.command(help="Loop currently playing song")
     async def loop(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -121,7 +125,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Queue currently playing music")
+    @commands.command(help="Show queued songs")
     async def queue(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -134,7 +138,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(alliases=['np'], help="Info of currently playing music")
+    @commands.command(alliases=['np'], help="Info of currently playing song")
     async def now_playing(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -143,7 +147,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Skip currently playing music")
+    @commands.command(help="Skip currently playing song")
     async def skip(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -152,7 +156,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Change the volume of music")
+    @commands.command(help="Change the volume of song")
     async def volume(self, ctx, vol):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -171,7 +175,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Play searched music")
+    @commands.command(help="Play searched song")
     async def play_search(self, ctx, n):
         n = int(n)
         await ctx.send('Gimme me a sec...')
