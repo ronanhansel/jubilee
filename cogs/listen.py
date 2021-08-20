@@ -14,18 +14,25 @@ class Listen(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        _id = "_" + str(message.guild.id)
+        _id = "_" + str(message.author.id)
+        _id_s = "_s" + str(message.guild.id)
         msg = message.content
         if message.author == self.client.user:
             return
         if msg.startswith('>'):
-            if check_table(_id, msg[1:])[0]:
-                await message.channel.send(get_note(_id, msg[1:])[0][1])
-            else:
+            try:
+                await message.channel.send(get_note(_id, msg[1:])[1])
+            except Exception:
                 await message.channel.send('Welp no such note, try `-notes` to see all available keys')
-
+        
+        if msg.startswith('.'):
+            try:
+                await message.channel.send(get_note(_id_s, msg[1:])[1])
+            except Exception:
+                await message.channel.send('Welp no such note, try `-notes` to see all available keys')
         if message.mentions and (self.client.get_user(self.client.user.id) == message.mentions[0]):
             await message.channel.send("I\'m awake!")
+
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

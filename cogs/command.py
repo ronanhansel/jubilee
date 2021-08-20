@@ -20,22 +20,19 @@ class Command(commands.Cog):
         data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
         await ctx.send(data["memes"][0]["url"])
 
-    @commands.command(help="Add note")
+    @commands.command(help="Add note for yourself")
     async def note(self, ctx, key, *, val):
-        _id = "_" + str(ctx.message.guild.id)
-        try:
-            if not note.check_table(_id, key)[0]:
-                note.insert_note(_id, key, val)
-                await ctx.send('Got it!')
-            else:
-                await ctx.send('Note existed, to change value use `change`')
-        except Exception:
-            note.create_table(_id)
-            await ctx.send('I have just created a storage for this server, try again')
+        _id = "_" + str(ctx.message.author.id)
+        note.create_table(_id)
+        if not note.check_table(_id, key)[0]:
+            note.insert_note(_id, key, val)
+            await ctx.send('Got it!')
+        else:
+            await ctx.send('Note existed, to change value use `change`')
 
     @commands.command(help="Change note")
     async def change(self, ctx, key, *, val):
-        _id = "_" + str(ctx.message.guild.id)
+        _id = "_" + str(ctx.message.author.id)
         if not note.check_table(_id, key):
             await ctx.send(key + ' This key does not exist, use command `note` to create note')
         else:
@@ -43,8 +40,11 @@ class Command(commands.Cog):
             await ctx.send('Overridden note')
 
     @commands.command(help="List all notes")
-    async def notes(self, ctx):
-        _id = "_" + str(ctx.message.guild.id)
+    async def notes(self, ctx, option='me'):
+        if option == 'server':
+            _id = "_s" + str(ctx.message.guild.id)
+            
+        else: _id = "_" + str(ctx.message.author.id)
         try:
             line = "Soooo, here are the notes I remember, to use them, type '>key': \n"
             keys = [i[0] for i in note.get_note_all(_id)]
@@ -57,7 +57,7 @@ class Command(commands.Cog):
 
     @commands.command(help="Delete note")
     async def forget(self, ctx, key):
-        _id = "_" + str(ctx.message.guild.id)
+        _id = "_" + str(ctx.message.author.id)
         if not note.check_table(_id, key):
             await ctx.send(key + ' This key does not exist, use command `note` to create note')
         else:
