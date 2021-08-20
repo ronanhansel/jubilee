@@ -1,9 +1,7 @@
-import os
 import discord
 from discord.ext import commands
 from discord.ext.commands.core import check
 import requests
-import json
 import data.note
 
 
@@ -25,18 +23,15 @@ class Command(commands.Cog):
     @commands.command(help="Add note")
     async def note(self, ctx, key, *, val):
         _id = "_" + str(ctx.message.guild.id)
-        if os.path.exists('data/note.db'):
-            try:
-                if not note.check_table(_id, key)[0]:
-                    note.insert_note(_id, key, val)
-                    await ctx.send('Got it!')
-                else:
-                    await ctx.send('Note existed, to change value use `change`')
-            except Exception:
-                note.create_table(_id)
-                await ctx.send('I have just created a storage for this server, try again')
-        else:
-            await ctx.send('Arghh, the database is not functioning, please give me some time, I will try to fix this ASAP')
+        try:
+            if not note.check_table(_id, key)[0]:
+                note.insert_note(_id, key, val)
+                await ctx.send('Got it!')
+            else:
+                await ctx.send('Note existed, to change value use `change`')
+        except Exception:
+            note.create_table(_id)
+            await ctx.send('I have just created a storage for this server, try again')
 
     @commands.command(help="Change note")
     async def change(self, ctx, key, *, val):
