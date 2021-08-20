@@ -1,5 +1,6 @@
 # Jubilee
 **An open source discord bot for anyone (who's interested)**
+
 A small side project I develop and maintain in my free time.
 Join Discord Server? I'd be surprised if anyone showed up 👀
 
