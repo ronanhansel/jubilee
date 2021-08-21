@@ -9,7 +9,7 @@ class Listen(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.client.change_presence(activity=discord.Game('Bee boo peep'))
+        await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Bee boo peep"))
         print('Logged in as {0.user}'. format(self.client))
 
     @commands.Cog.listener()
@@ -44,7 +44,6 @@ class Listen(commands.Cog):
             await ctx.send('''You aren't authorised buddy!''')
         else:
             await ctx.send(error)
-            print(error)
 
 
 def setup(client):

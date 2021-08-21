@@ -17,7 +17,6 @@ class Drive(commands.Cog):
         for i in folder.split("/"):
             if i[0] == "&":
                 for a in i[1:].split(".."):
-                    print(a)
                     mess += "\n" + "\t" * d + "↳" + a
             else:
                 mess += "\n" + "\t" * d + "↳" + i

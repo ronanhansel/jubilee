@@ -9,11 +9,9 @@ from google.oauth2.credentials import Credentials
 
 
 def create_service(client_secret_file, api_name, api_version, *scopes):
-    print(client_secret_file, api_name, api_version, scopes, sep='-')
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
-    print(SCOPES)
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created when the authorization flow completes for the first

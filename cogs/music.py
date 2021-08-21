@@ -87,7 +87,6 @@ class Music(commands.Cog):
                     except AttributeError:
                         await ctx.send("You have to join a voice channel first")
             except Exception as e:
-                print(e)
                 await ctx.send('Error, try another keyword or song')
 
     @commands.command(help="Pause currently playing song")
