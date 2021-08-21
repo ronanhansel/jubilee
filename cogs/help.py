@@ -2,16 +2,6 @@ import discord
 from discord.ext import commands
 from discord.errors import Forbidden
 
-"""This custom help command is a perfect replacement for the default one on any Discord Bot written in Discord.py!
-However, you must put "bot.remove_command('help')" in your bot, and the command must be in a cog for it to work.
-Original concept by Jared Newsom (AKA Jared M.F.)
-[Deleted] https://gist.github.com/StudioMFTechnologies/ad41bfd32b2379ccffe90b0e34128b8b
-Rewritten and optimized by github.com/nonchris
-https://gist.github.com/nonchris/1c7060a14a9d94e7929aa2ef14c41bc2
-You need to set three variables to make that cog run.
-Have a look at line 51 to 57
-"""
-
 
 async def send_embed(ctx, embed):
     """
@@ -46,7 +36,7 @@ class Help(commands.Cog):
 
         # !SET THOSE VARIABLES TO MAKE THE COG FUNCTIONAL!
         prefix = '-'
-        version = 2.4
+        version = 2.6 
 
         # setting owner name - if you don't wanna be mentioned remove line 49-60 and adjust help text (line 88)
         owner = "RonanHansel#0059"
@@ -82,7 +72,7 @@ class Help(commands.Cog):
                               value=commands_desc, inline=False)
 
             # setting information about author
-            emb.add_field(name="About", value=f"This bot created and maintained by {owner}\n\
+            emb.add_field(name="About", value=f"This bot created and maintained by {owner} since Friday 13th, August 2021\n\
                                     Please visit https://github.com/ronanhansel/jubilee to submit ideas or bugs.")
             emb.set_footer(text=f"Bot is running version {version}")
 
@@ -125,8 +115,7 @@ class Help(commands.Cog):
             emb = discord.Embed(title="It's a magical place.",
                                 description="I don't know how you got here. But I didn't see this coming at all.\n"
                                             "Would you please be so kind to report that issue to me on github?\n"
-                                            "https://github.com/nonchris/discord-fury/issues\n"
-                                            "Thank you! ~Chris - the author of this help command",
+                                            "https://github.com/ronanhansel/jubilee",
                                 color=discord.Color.red())
 
         # sending reply embed using our own function defined above
