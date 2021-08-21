@@ -3,7 +3,7 @@
 
 A small side project I develop and maintain in my free time.
 
-Join Discord Server in which I try and test out this bot, to see me suffer? I'd be surprised if anyone showed up 👀
+Join Discord Server in which I try and test out this bot, get frustrated? I'd be surprised if anyone showed up 👀
 
 [![Support Server](https://invidget.switchblade.xyz/Cru4EVGM)](https://discord.gg/Cru4EVGM)
 # Instructions
