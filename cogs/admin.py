@@ -78,7 +78,7 @@ class Admin(commands.Cog):
         except Exception:
             note.create_table(_id)
             await ctx.send('I have just created a storage for this instance, try again')
-    @commands.command(help="Delete note")
+    @commands.command(help="Delete note server")
     @commands.has_permissions(administrator=True)
     async def forget_server(self, ctx, key):
         _id = "_s" + str(ctx.message.guild.id)

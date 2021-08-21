@@ -49,7 +49,7 @@ class Command(commands.Cog):
             _id = "_" + str(ctx.message.author.id)
             _prefix = ">"
         try:
-            line = "Soooo, here are the notes I remember, to use them, type '>key': \n"
+            line = "Soooo, here are the notes I remember, to use them, type '{}key': \n".format(_prefix)
             keys = [i[0] for i in note.get_note_all(_id)]
             if len(keys) >= 1:
               for i in sorted(keys):
