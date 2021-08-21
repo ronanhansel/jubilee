@@ -78,6 +78,15 @@ class Admin(commands.Cog):
         except Exception:
             note.create_table(_id)
             await ctx.send('I have just created a storage for this instance, try again')
+    @commands.command(help="Delete note")
+    @commands.has_permissions(administrator=True)
+    async def forget_server(self, ctx, key):
+        _id = "_s" + str(ctx.message.guild.id)
+        if not note.check_table(_id, key):
+            await ctx.send(key + ' This key does not exist, use command `note` to create note')
+        else:
+            note.remove_note(_id, key)
+            await ctx.send('Ooops i forgot it, server edition')
 
 # Functions
 

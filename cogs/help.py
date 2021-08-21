@@ -46,7 +46,7 @@ class Help(commands.Cog):
 
         # !SET THOSE VARIABLES TO MAKE THE COG FUNCTIONAL!
         prefix = '-'
-        version = 1.0
+        version = 2.4
 
         # setting owner name - if you don't wanna be mentioned remove line 49-60 and adjust help text (line 88)
         owner = "RonanHansel#0059"

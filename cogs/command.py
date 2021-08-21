@@ -62,11 +62,8 @@ class Command(commands.Cog):
             await ctx.send('Empty note')
 
     @commands.command(help="Delete note")
-    async def forget(self, ctx, key, option='me'):
-        if option == 'server':
-          _id = "_s" + str(ctx.message.guild.id)
-        else:
-          _id = "_" + str(ctx.message.author.id)
+    async def forget(self, ctx, key):
+        _id = "_" + str(ctx.message.author.id)
         if not note.check_table(_id, key):
             await ctx.send(key + ' This key does not exist, use command `note` to create note')
         else:
