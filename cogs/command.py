@@ -51,7 +51,7 @@ class Command(commands.Cog):
         try:
             line = "Soooo, here are the notes I remember, to use them, type '>key': \n"
             keys = [i[0] for i in note.get_note_all(_id)]
-            if len(keys) > 1:
+            if len(keys) >= 1:
               for i in sorted(keys):
                   line += '\t' + _prefix + i
                   line += '\n'
