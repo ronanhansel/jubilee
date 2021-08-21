@@ -51,16 +51,22 @@ class Command(commands.Cog):
         try:
             line = "Soooo, here are the notes I remember, to use them, type '>key': \n"
             keys = [i[0] for i in note.get_note_all(_id)]
-            for i in sorted(keys):
-                line += '\t' + _prefix + i
-                line += '\n'
-            await ctx.send(line)
+            if len(keys) > 1:
+              for i in sorted(keys):
+                  line += '\t' + _prefix + i
+                  line += '\n'
+              await ctx.send(line)
+            else:
+              await ctx.send('Empty notes')
         except Exception:
             await ctx.send('Empty notes')
 
     @commands.command(help="Delete note")
-    async def forget(self, ctx, key):
-        _id = "_" + str(ctx.message.author.id)
+    async def forget(self, ctx, key, option='me'):
+        if option == 'server':
+          _id = "_s" + str(ctx.message.guild.id)
+        else:
+          _id = "_" + str(ctx.message.author.id)
         if not note.check_table(_id, key):
             await ctx.send(key + ' This key does not exist, use command `note` to create note')
         else:
