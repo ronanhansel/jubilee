@@ -57,9 +57,9 @@ class Command(commands.Cog):
                   line += '\n'
               await ctx.send(line)
             else:
-              await ctx.send('Empty notes')
+              await ctx.send('Empty note')
         except Exception:
-            await ctx.send('Empty notes')
+            await ctx.send('Empty note')
 
     @commands.command(help="Delete note")
     async def forget(self, ctx, key, option='me'):
