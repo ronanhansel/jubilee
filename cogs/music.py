@@ -10,7 +10,64 @@ players = {}
 
 search_q = []
 
-search_q_img = []
+class MusicInfo():
+    name = ''
+    img_url = ''
+    duration = ''
+    url = ''
+    view = ''
+    channel = ''
+    requester = ''
+
+m = MusicInfo()
+
+async def playm(ctx, songname):
+    try:
+        video_search = VideosSearch(songname, limit=1)
+        result = SimpleNamespace(**video_search.result()).result
+        url = result[0]['link']
+        img = result[0]['thumbnails'][1]['url']
+        title = result[0]['accessibility']['title']
+        title = title[:title.index("by")]
+        view = result[0]['viewCount']['short']
+        dur = result[0]['duration']
+        channel_name = result[0]['channel']['name']
+        requester = ctx.message.author.name
+        player = music.get_player(guild_id=ctx.guild.id)
+        
+        try:
+            if not player:
+                player = music.create_player(ctx,
+                                                ffmpeg_error_betterfix=True)
+            if not ctx.voice_client.is_playing():
+                await player.queue(url, search=True)
+                player.on_play(setmusic(name=title, img_url=img, duration=dur,
+                                        view=view, channel=channel_name, requester=requester, url=url))
+                # player.on_stop()
+                await player.play()
+                embed = discord.Embed(title=f'Playing **{m.name}**', color=discord.Color.dark_gold(),
+                                        description=f'{m.view} - {m.channel} | {m.duration}\n' + f'Requested by {m.requester}')
+                embed.set_author(name='YouTube')
+                embed.set_thumbnail(url=img)
+                await ctx.send(embed=embed)
+            else:
+                await player.queue(url, search=True)
+                embed = discord.Embed(title=f'Queued **{title}**', color=discord.Color.dark_gold(),
+                                        description=f'{view} - {channel_name} | {dur}\n' + f'Requested by {requester}')
+                embed.set_author(name='YouTube')
+                embed.set_thumbnail(url=img)
+                await ctx.send(embed=embed)
+        except DiscordUtils.NotConnectedToVoice:
+            await ctx.send(
+                "Not connected to any voice channel, lemme join...")
+            try:
+                await ctx.author.voice.channel.connect()
+                await ctx.send("Dune!")
+                await playm(ctx=ctx, songname=songname)
+            except AttributeError:
+                await ctx.send("You have to join a voice channel first")
+    except Exception:
+        await ctx.send('Error, try another keyword or song')
 
 
 class Music(commands.Cog):
@@ -39,57 +96,18 @@ class Music(commands.Cog):
             await ctx.send("I'm out, what a nice music session")
         except AttributeError:
             await ctx.send("I'm not in any channel")
+        
 
     @commands.command(help="Play the first song with specified name on YouTube")
     async def play(self, ctx, *, songname):
-        await ctx.send("Gimme a sec...")
         try:
             n = int(songname)
-            await play_search(ctx, n)
+            title = search_q[n-1]
+            title = title[:title.index("by")]
+            await playm(ctx=ctx, songname=title)
         except Exception:
-            try:
-                video_search = VideosSearch(songname, limit=1)
-                result = SimpleNamespace(**video_search.result()).result
-                url = result[0]['link']
-                img = result[0]['thumbnails'][1]['url']
-                title = result[0]['accessibility']['title']
-                view = result[0]['viewCount']['short']
-                dur = result[0]['duration']
-                player = music.get_player(guild_id=ctx.guild.id)
-                try:
-                    if not player:
-                        player = music.create_player(ctx,
-                                                    ffmpeg_error_betterfix=True)
-                    if not ctx.voice_client.is_playing():
-                        await player.queue(url, search=True)
-                        await player.play()
-                        await ctx.send("Playing")
-                        channel_name = result[0]['channel']['name']
-                        embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                            description=f'{view} - {channel_name} | {dur}\n' + f'Requested by {ctx.message.author.name}')
-                        embed.set_author(name='YouTube')
-                        embed.set_thumbnail(url=img)
-                        await ctx.send(embed=embed)
-                    else:
-                        await player.queue(url, search=True)
-                        await ctx.send("Queued")
-                        channel_name = result[0]['channel']['name']
-                        embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                            description=f'{view} - {channel_name} | {dur}\n' + f'Requested by {ctx.message.author.name}')
-                        embed.set_author(name='YouTube')
-                        embed.set_thumbnail(url=img)
-                        await ctx.send(embed=embed)
-                except DiscordUtils.NotConnectedToVoice:
-                    await ctx.send(
-                        "Not connected to any voice channel, lemme join...")
-                    try:
-                        await ctx.author.voice.channel.connect()
-                        await ctx.send("Aight, try again")
-                    except AttributeError:
-                        await ctx.send("You have to join a voice channel first")
-            except Exception as e:
-                print(e)
-                await ctx.send('Error, try another keyword or song')
+            await playm(ctx=ctx, songname=songname)
+            
 
     @commands.command(help="Pause currently playing song")
     async def pause(self, ctx):
@@ -147,8 +165,11 @@ class Music(commands.Cog):
     async def now_playing(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            song = player.now_playing()
-            await ctx.send(song.name)
+            embed = discord.Embed(title=f'Queued **{m.name}**', color=discord.Color.dark_gold(),
+                                              description=f'{m.view} - {m.channel} | {m.duration}\n' + f'Requested by {m.requester}')
+            embed.set_author(name='YouTube')
+            embed.set_thumbnail(url=m.img_url)
+            await ctx.send(embed=embed)
         else:
             await ctx.send("Not playing anything")
 
@@ -186,7 +207,6 @@ class Music(commands.Cog):
             await ctx.send('You can\'t have more than 10 results, that\'s too much for me 🥲')
         else:
             search_q.clear()
-            search_q_img.clear()
             video_search = VideosSearch(keyword, limit=n)
             result = SimpleNamespace(**video_search.result()).result
             try:
@@ -194,13 +214,11 @@ class Music(commands.Cog):
                     img = result[i]['thumbnails'][1]['url']
                     title = result[i]['accessibility']['title']
                     view = result[i]['viewCount']['short']
-                    url = result[i]['link']
                     dur = result[i]['duration']
-                    search_q.append(url)
-                    search_q_img.append(img)
+                    search_q.append(title)
                     channel_name = result[i]['channel']['name']
                     embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                        description=f'{view} - {channel_name} | {dur}')
+                                          description=f'{view} - {channel_name} | {dur}')
                     embed.set_author(name='YouTube')
                     embed.set_thumbnail(url=img)
                     await ctx.send(embed=embed)
@@ -208,38 +226,18 @@ class Music(commands.Cog):
                 await ctx.send('That\'s it lol, did you search something ... oddly specific 🙄?')
 
 
-async def play_search(ctx, n):
-        n = int(n)
-        url = search_q[n-1]
-        img = search_q_img[n-1]
-        player = music.get_player(guild_id=ctx.guild.id)
-        try:
-            if not player:
-                player = music.create_player(ctx,
-                                             ffmpeg_error_betterfix=True)
-            if not ctx.voice_client.is_playing():
-                await player.queue(url, search=True)
-                song = await player.play()
-                embed = discord.Embed(title=f'Playing **{song.name}**', color=discord.Color.dark_gold(),
-                                      description=f'Requested by {ctx.message.author.name}')
-                embed.set_author(name='YouTube')
-                embed.set_thumbnail(url=img)
-                await ctx.send(embed=embed)
-            else:
-                song = await player.queue(url, search=True)
-                embed = discord.Embed(title=f'Queued **{song.name}**', color=discord.Color.dark_gold(),
-                                      description=f'Requested by {ctx.message.author.name}')
-                embed.set_author(name='YouTube')
-                embed.set_thumbnail(url=img)
-                await ctx.send(embed=embed)
-        except DiscordUtils.NotConnectedToVoice:
-            await ctx.send(
-                "Not connected to any voice channel, lemme join...")
-            try:
-                await ctx.author.voice.channel.connect()
-                await ctx.send("Aight, try again")
-            except AttributeError:
-                await ctx.send("You have to join a voice channel first")
+
+
+
+def setmusic(name, img_url, duration, view, channel, requester, url):
+    m.img_url = img_url
+    m.duration = duration
+    m.view = view
+    m.channel = channel
+    m.requester = requester
+    m.url = url
+    m.name = name
+
 
 def setup(client):
     client.add_cog(Music(client))
