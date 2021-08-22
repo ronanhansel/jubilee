@@ -133,3 +133,9 @@ dmypy.json
 token.json
 *.db
 test.py
+# My custom APIs, figure it's just doesn't really serve any real purpose for an average Joe so 
+#I'm just removing this
+cogs/fbreport.py
+google.py
+drive_get.py
+create_token.py

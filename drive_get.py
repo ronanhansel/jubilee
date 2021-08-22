@@ -1,4 +1,4 @@
-from Google import create_service
+from google import create_service
 import os
 
 CLIENT_SECRET = 'credentials.json'
