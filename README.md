@@ -16,6 +16,7 @@ install dependencies
 ```
   >>> pip install discord
   >>> pip install DiscordUtils[voice]
+  >>> pip install psutil
 ```
 See `requirements.txt` for more details
 
