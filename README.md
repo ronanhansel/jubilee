@@ -20,19 +20,7 @@ install dependencies
 See `requirements.txt` for more details
 
 ## Environment variables
-### For Google Drive API
-Key  | Variable
-------------- | -------------
-client_id  | client id of the google api app
-client_secret  | client secret of the google api app
-DRIVE_DEFAULT_ID | default id for google drive folder
-project_id | project id of the google api app
-REF_TOKEN | output of token.json
 ### For bot
 Key | Variable
 ------------- | -------------
 discord_token | token for discord bot
-### For facebook page insights
-Key | Variable
-------------- | -------------
-fb_token | page token for facebook app
