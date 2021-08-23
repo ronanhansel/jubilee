@@ -58,11 +58,8 @@ async def playm(ctx, songname):
                 embed.set_thumbnail(url=img)
                 await ctx.send(embed=embed)
         except DiscordUtils.NotConnectedToVoice:
-            await ctx.send(
-                "Not connected to any voice channel, lemme join...")
             try:
                 await ctx.author.voice.channel.connect()
-                await ctx.send("Dune!")
                 await playm(ctx=ctx, songname=songname)
             except AttributeError:
                 await ctx.send("You have to join a voice channel first")
