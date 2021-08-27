@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import discord
 from discord.ext import commands
 import DiscordUtils
@@ -199,28 +200,32 @@ class Music(commands.Cog):
             await ctx.send("Not playing anything")
 
     @commands.command(help="Return a specified number of search result")
-    async def search(self, ctx, n=3, *, keyword):
-        if n > 10:
-            await ctx.send('You can\'t have more than 10 results, that\'s too much for me 🥲')
-        else:
-            search_q.clear()
-            video_search = VideosSearch(keyword, limit=n)
-            result = SimpleNamespace(**video_search.result()).result
-            try:
-                for i in range(0, len(result)):
-                    img = result[i]['thumbnails'][1]['url']
-                    title = result[i]['accessibility']['title']
-                    view = result[i]['viewCount']['short']
-                    dur = result[i]['duration']
-                    search_q.append(title)
-                    channel_name = result[i]['channel']['name']
-                    embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                          description=f'{view} - {channel_name} | {dur}')
-                    embed.set_author(name='YouTube')
-                    embed.set_thumbnail(url=img)
-                    await ctx.send(embed=embed)
-            except IndexError:
-                await ctx.send('That\'s it lol, did you search something ... oddly specific 🙄?')
+    async def search(self, ctx, n='none', *, keyword='NULL'):
+        try:
+            n = int(n)
+            if n > 10:
+                await ctx.send('You can\'t have more than 10 results, that\'s too much for me 🥲')
+            else:
+                search_q.clear()
+                video_search = VideosSearch(keyword, limit=n)
+                result = SimpleNamespace(**video_search.result()).result
+                try:
+                    for i in range(0, len(result)):
+                        img = result[i]['thumbnails'][1]['url']
+                        title = result[i]['accessibility']['title']
+                        view = result[i]['viewCount']['short']
+                        dur = result[i]['duration']
+                        search_q.append(title)
+                        channel_name = result[i]['channel']['name']
+                        embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
+                                            description=f'{view} - {channel_name} | {dur}')
+                        embed.set_author(name='YouTube')
+                        embed.set_thumbnail(url=img)
+                        await ctx.send(embed=embed)
+                except IndexError:
+                    await ctx.send('That\'s it lol, did you search something ... oddly specific 🙄?')
+        except ValueError:
+            await ctx.send('You need to specify the `number` of result as in `-search number keyword`')
 
 
 
