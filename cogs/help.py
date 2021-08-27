@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.errors import Forbidden
+from bot_info import ver
 
 
 async def send_embed(ctx, embed):
@@ -36,7 +37,7 @@ class Help(commands.Cog):
 
         # !SET THOSE VARIABLES TO MAKE THE COG FUNCTIONAL!
         prefix = '-'
-        version = 2.6 
+        version = ver
 
         # setting owner name - if you don't wanna be mentioned remove line 49-60 and adjust help text (line 88)
         owner = "RonanHansel#0059"

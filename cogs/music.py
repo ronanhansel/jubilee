@@ -3,6 +3,7 @@ from discord.ext import commands
 import DiscordUtils
 from youtubesearchpython import VideosSearch
 from types import SimpleNamespace
+from data.note import check_table, get_note
 
 music = DiscordUtils.Music()
 

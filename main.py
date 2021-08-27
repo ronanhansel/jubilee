@@ -1,8 +1,10 @@
 from discord.ext import commands
-import os
-
+from data.note import get_note
 from data.note import autocommit, rollback
 from discord.ext import commands
+
+import os
+import discord
 import psutil
 import math
 
@@ -48,7 +50,7 @@ async def ram_usage(ctx):
     await ctx.send(mess)
 @client.command(hidden=True)
 @commands.is_owner()
-async def rollback(self, ctx):
+async def rollback(ctx):
     await ctx.send('Rolling back SQL data...')
     rollback()
     await ctx.send('Done!')
@@ -59,6 +61,39 @@ async def autocommit_sql(ctx, cmd):
     await ctx.send('Setting Autocommit to: {}'.format(cmd))
     autocommit(cmd)
     await ctx.send('Done!')
+
+
+# Listening actions
+@client.event
+async def on_ready():
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Bee boo peep"))
+    print('Logged in as {0.user}'. format(client))
+
+@client.event
+async def on_message(message):
+    _id = "_" + str(message.author.id)
+    msg = message.content
+    if message.author == client.user:
+        return
+    if msg.startswith('>'):
+        try:
+            await message.channel.send(get_note(_id, msg[1:])[1])
+        except Exception:
+            await message.channel.send('Welp no such note, try `-notes` to see all available keys')
+    if message.mentions and (client.get_user(client.user.id) == message.mentions[0]):
+        await message.channel.send("I\'m awake!")
+    await client.process_commands(message)
+
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, discord.ext.commands.errors.CommandNotFound):
+        await ctx.send("Unknown command, see `-help` for more infomation")
+    elif isinstance(error, commands.NotOwner):
+        await ctx.send('''You aren't the owner buddy!''')
+    elif isinstance(error, (commands.MissingRole, commands.MissingAnyRole)):
+        await ctx.send('''You aren't authorised buddy!''')
+    else:
+        await ctx.send(error)
 
 # Run the bot
 client.run(os.getenv('discord_token'))
