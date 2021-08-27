@@ -4,9 +4,7 @@ from discord.ext.commands.core import check
 import requests
 import data.note
 
-
 note = data.note
-
 
 class Command(commands.Cog):
     "The commands anyone can use"
@@ -41,13 +39,8 @@ class Command(commands.Cog):
 
     @commands.command(help="List all notes")
     async def notes(self, ctx, option='me'):
-        if option == 'server':
-            _id = "_s" + str(ctx.message.guild.id)
-            _prefix = "."
-            
-        else: 
-            _id = "_" + str(ctx.message.author.id)
-            _prefix = ">"
+        _id = "_" + str(ctx.message.author.id)
+        _prefix = ">"
         try:
             line = "Soooo, here are the notes I remember, to use them, type '{}key': \n".format(_prefix)
             keys = [i[0] for i in note.get_note_all(_id)]
@@ -75,9 +68,8 @@ class Command(commands.Cog):
         msg = word
         e = ''
         space = ' '
-
         for a in msg:
-            e += a + ' '
+            e += a + '   '
         e += '\n'
         index = 1
         for i in msg[1:]:
@@ -89,12 +81,11 @@ class Command(commands.Cog):
     async def ping(self, ctx, member: discord.User, *, word):
         await member.send(f'{ctx.author} pinged you: {word}')
         await ctx.send('Pinged, I\'m annoying')
+
+
 # Functions
-
-
 async def dl(self, ctx, val):
     await ctx.channel.purge(limit=val+1)
-
 
 def setup(client):
     client.add_cog(Command(client))

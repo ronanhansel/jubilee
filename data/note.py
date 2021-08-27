@@ -36,8 +36,8 @@ def get_note(_id, key):
 
 def change_note(_id, key, value):
     with conn:
-        c.execute("""update public.{} set value = {}
-                    where key like {}""".format(_id, value, key),
+        c.execute("""update public.{} set value='{}'
+                    where key like '{}'""".format(_id, value, key),
                   )
 
 
