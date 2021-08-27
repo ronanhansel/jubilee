@@ -32,15 +32,34 @@ class Admin(commands.Cog):
 
     @commands.command(help="Create a role")
     @commands.has_permissions(administrator=True)
-    async def create(self, ctx, colour='#1cebe1', *, name):
-        col = discord.Colour(value=int(colour[1:], 16))
-        role = discord.utils.get(ctx.guild.roles, name=name)
-        if not role:
-            guild = ctx.guild
-            await guild.create_role(name=name, colour=col)
-            await ctx.send(f"Created role {name}")
-        else:
-            await ctx.send("The role is there")
+    async def create(self, ctx, *command):
+        try:
+            try:
+                if (command[0] == "-c"):
+                    colour = command[1]
+                    if len(colour) != 6:
+                        await ctx.send(len(colour))
+                        await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
+                        await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
+                        return
+                    name = ' '.join(command[2:])
+                else:
+                    colour = '99aab5'
+                    name = ' '.join(command[0:])
+            except IndexError:
+                await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
+                await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
+                return
+            col = discord.Colour(value=int(colour, 16))
+            role = discord.utils.get(ctx.guild.roles, name=name)
+            if not role:
+                guild = ctx.guild
+                await guild.create_role(name=name, colour=col)
+                await ctx.send(f"Created role {name}")
+            else:
+                await ctx.send("The role is there")
+        except Exception as e:
+            await ctx.send(e)
 
     @commands.command(help="Remove a role")
     @commands.has_permissions(administrator=True)

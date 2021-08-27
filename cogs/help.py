@@ -31,11 +31,9 @@ class Help(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    # @commands.bot_has_permissions(add_reactions=True,embed_links=True)
     async def help(self, ctx, *input):
         """Shows all modules of that bot"""
 
-        # !SET THOSE VARIABLES TO MAKE THE COG FUNCTIONAL!
         prefix = '-'
         version = ver
 
@@ -73,7 +71,7 @@ class Help(commands.Cog):
                               value=commands_desc, inline=False)
 
             # setting information about author
-            emb.add_field(name="About", value=f"This bot is created and maintained by {owner} since Friday 13th, August 2021\n\
+            emb.add_field(name="About", value=f"This bot is created and maintained by {owner}\n\
                                     Please visit https://github.com/ronanhansel/jubilee to submit ideas or bugs.")
             emb.set_footer(text=f"Bot is running version {version}")
 
