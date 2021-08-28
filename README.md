@@ -7,7 +7,6 @@ A small side project I develop and maintain in my free time. I'll try to keep th
 
 Join Discord Server in which I try and test out this bot, to see me get frustrated? I'd be surprised if anyone showed up 👀
 
-[![Support Server](https://user-images.githubusercontent.com/64572619/130349536-08241313-1deb-49c4-b49a-511fe042862c.png)](https://discord.gg/Cru4EVGM)
 
 If the code gets more complicated, I'll make sure I note everything needed here in `readme.md` so dont worry 👍
 
