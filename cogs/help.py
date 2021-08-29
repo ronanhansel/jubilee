@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord.errors import Forbidden
-from bot_info import ver
 
 
 async def send_embed(ctx, embed):
@@ -35,7 +34,8 @@ class Help(commands.Cog):
         """Shows all modules of that bot"""
 
         prefix = '-'
-        version = ver
+        version = '3.0'
+        hidden = ['Owner', 'Help', 'Listen']
 
         # setting owner name - if you don't wanna be mentioned remove line 49-60 and adjust help text (line 88)
         owner = "RonanHansel#0059"
@@ -51,9 +51,8 @@ class Help(commands.Cog):
 
             # iterating trough cogs, gathering descriptions
             cogs_desc = ''
-            for cog in self.bot.cogs:
+            for cog in list(sel for sel in self.bot.cogs if sel not in hidden):
                 cogs_desc += f'`{cog}` {self.bot.cogs[cog].__doc__}\n'
-
             # adding 'list' of cogs to embed
             emb.add_field(name='Modules', value=cogs_desc, inline=False)
 

@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands.core import check
 import requests
 import data.note
 

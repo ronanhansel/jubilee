@@ -34,32 +34,29 @@ class Admin(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def create(self, ctx, *command):
         try:
-            try:
-                if (command[0] == "-c"):
-                    colour = command[1]
-                    if len(colour) != 6:
-                        await ctx.send(len(colour))
-                        await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
-                        await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
-                        return
-                    name = ' '.join(command[2:])
-                else:
-                    colour = '99aab5'
-                    name = ' '.join(command[0:])
-            except IndexError:
-                await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
-                await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
-                return
-            col = discord.Colour(value=int(colour, 16))
-            role = discord.utils.get(ctx.guild.roles, name=name)
-            if not role:
-                guild = ctx.guild
-                await guild.create_role(name=name, colour=col)
-                await ctx.send(f"Created role {name}")
+            if (command[0] == "-c"):
+                colour = command[1]
+                if len(colour) != 6:
+                    await ctx.send(len(colour))
+                    await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
+                    await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
+                    return
+                name = ' '.join(command[2:])
             else:
-                await ctx.send("The role is there")
-        except Exception as e:
-            await ctx.send(e)
+                colour = '99aab5'
+                name = ' '.join(command[0:])
+        except IndexError:
+            await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
+            await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
+            return
+        col = discord.Colour(value=int(colour, 16))
+        role = discord.utils.get(ctx.guild.roles, name=name)
+        if not role:
+            guild = ctx.guild
+            await guild.create_role(name=name, colour=col)
+            await ctx.send(f"Created role {name}")
+        else:
+            await ctx.send("The role is there")
 
     @commands.command(help="Remove a role")
     @commands.has_permissions(administrator=True)
@@ -74,7 +71,7 @@ class Admin(commands.Cog):
     @commands.command(help="Delete messages")
     @commands.has_permissions(administrator=True)
     async def purge(self, ctx, val, silence=True):
-        await dl(self, ctx, int(val))
+        await ctx.channel.purge(limit=val+1)
         if not silence:
             await ctx.send(f'Purged {val} message(s)')
 
@@ -83,12 +80,6 @@ class Admin(commands.Cog):
     async def speak(self, ctx, *, word):
         await ctx.message.delete()
         await ctx.send(word)
-
-# Functions
-
-
-async def dl(self, ctx, val):
-    await ctx.channel.purge(limit=val+1)
 
 
 def setup(client):
