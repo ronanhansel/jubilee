@@ -4,7 +4,6 @@ import data.note
 
 note = data.note
 
-
 class Admin(commands.Cog):
     "Admin-permitted commands"
 
@@ -71,6 +70,7 @@ class Admin(commands.Cog):
     @commands.command(help="Delete messages")
     @commands.has_permissions(administrator=True)
     async def purge(self, ctx, val, silence=True):
+        val = int(val)
         await ctx.channel.purge(limit=val+1)
         if not silence:
             await ctx.send(f'Purged {val} message(s)')
