@@ -1,7 +1,9 @@
 import discord
-from discord.ext import commands
+import json
+import random
 import requests
 import data.note
+from discord.ext import commands
 
 note = data.note
 
@@ -16,6 +18,11 @@ class Command(commands.Cog):
     async def meme(self, ctx):
         data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
         await ctx.send(data["memes"][0]["url"])
+
+    @commands.command(help="Flirt!")
+    async def flirt(self, ctx):
+        data = json.load(open("./data/quotes.json"))
+        await ctx.send(data[random.randint(0,len(data))])
 
     @commands.command(help="Add note for yourself")
     async def note(self, ctx, key, *, val):
