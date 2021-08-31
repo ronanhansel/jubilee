@@ -75,11 +75,6 @@ class Admin(commands.Cog):
         if not silence:
             await ctx.send(f'Purged {val} message(s)')
 
-    @commands.command(help="Using bot to message")
-    @commands.has_permissions(administrator=True)
-    async def speak(self, ctx, *, word):
-        await ctx.message.delete()
-        await ctx.send(word)
 
 
 def setup(client):

@@ -37,6 +37,12 @@ class Owner(commands.Cog):
         await ctx.send('Setting Autocommit to: {}'.format(cmd))
         autocommit(cmd)
         await ctx.send('Done!')
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def speak(self, ctx, *, word):
+        await ctx.message.delete()
+        await ctx.send(word)
 
 def setup(client):
     client.add_cog(Owner(client))
