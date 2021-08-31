@@ -6,8 +6,7 @@ from data.note import get_note
 class Listen(commands.Cog):
     "Bot listeners"
     def __init__(self, client):
-        self.client = client
-
+        self.client = client 
     @commands.Cog.listener()
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening,
@@ -16,6 +15,7 @@ class Listen(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        # NOTING PART
         _id = "_" + str(message.author.id)
         msg = message.content
         if message.author == self.client.user:
@@ -38,7 +38,6 @@ class Listen(commands.Cog):
             await ctx.send('''You aren't authorised buddy!''')
         else:
             await ctx.send(error)
-
 
 def setup(client):
     client.add_cog(Listen(client))

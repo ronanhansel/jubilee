@@ -3,6 +3,7 @@ from data.note import rollback, autocommit
 import data.note
 import psutil
 import math
+import discord
 
 note = data.note
 
@@ -18,31 +19,24 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def cpu_usage(self, ctx, sec=1):
         await ctx.send(f'The CPU usage is: {psutil.cpu_percent(int(sec))}%')
-
     @commands.command(hidden=True)
     @commands.is_owner()
     async def ram_usage(self, ctx):
         mess = f'total: {round(psutil.virtual_memory()[0]/(math.pow(10, 9)), 2)}GB\navailable: {round(psutil.virtual_memory()[1]/(math.pow(10, 9)), 2)}GB\npercent: {psutil.virtual_memory()[2]}%\nused: {round(psutil.virtual_memory()[3]/(math.pow(10, 9)), 2)}GB\nfree: {round(psutil.virtual_memory()[4]/(math.pow(10, 9)), 2)}GB'
-        await ctx.send(mess)
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def rollback(self, ctx):
-        await ctx.send('Rolling back SQL data...')
-        rollback()
-        await ctx.send('Done!')
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def autocommit_sql(self, ctx, cmd):
-        int(cmd)
-        await ctx.send('Setting Autocommit to: {}'.format(cmd))
-        autocommit(cmd)
-        await ctx.send('Done!')
-    
+        await ctx.send(mess)    
     @commands.command(hidden=True)
     @commands.is_owner()
     async def speak(self, ctx, *, word):
         await ctx.message.delete()
         await ctx.send(word)
+    @commands.command()
+    @commands.is_owner()
+    async def message_count(self, ctx, channel: discord.TextChannel=None):
+        channel = channel or ctx.channel
+        count = 0
+        async for _ in channel.history(limit=None):
+            count += 1
+        await ctx.send("There were {} messages in {}".format(count, channel.mention))
 
 def setup(client):
     client.add_cog(Owner(client))

@@ -37,14 +37,14 @@ class Command(commands.Cog):
     @commands.command(help="Change note")
     async def change(self, ctx, key, *, val):
         _id = "_" + str(ctx.message.author.id)
-        if not note.check_table(_id, key):
+        if not note.check_table(_id, key)[0]:
             await ctx.send(key + ' This key does not exist, use command `note` to create note')
         else:
             note.change_note(_id, key, val)
             await ctx.send('Overridden note')
 
     @commands.command(help="List all notes")
-    async def notes(self, ctx, option='me'):
+    async def notes(self, ctx):
         _id = "_" + str(ctx.message.author.id)
         _prefix = ">"
         try:
