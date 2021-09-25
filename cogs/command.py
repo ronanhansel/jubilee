@@ -99,13 +99,13 @@ class Command(commands.Cog):
             w = d['word']
             defi = d['definition']
             ex = d['example']
-            contents_w.append(f"*{defi}*\n \n{ex}")
+            contents_w.append(f"*{defi}*\n \n{ex} \n \"Source: Urban Dictionary\"")
             contents.append(f"{w}")
         pages = len(l['list'])
         cur_page = 1
         content = contents[cur_page-1]
         content_w = contents_w[cur_page-1]
-        message = await ctx.send(embed=discord.Embed(description=f"{content_w}", title=f"{content}"))
+        message = await ctx.send(embed=discord.Embed(description=f"{content_w} Page {cur_page}/{pages}", title=f"{content}"))
         # getting the message object for editing and reacting
 
         await message.add_reaction("◀️")
@@ -125,14 +125,14 @@ class Command(commands.Cog):
                     cur_page += 1
                     content = contents[cur_page-1]
                     content_w = contents_w[cur_page-1]
-                    await message.edit(embed=discord.Embed(description=f"{content_w}", title=f"{content}"))
+                    await message.edit(embed=discord.Embed(description=f"{content_w} Page {cur_page}/{pages}", title=f"{content}"))
                     await message.remove_reaction(reaction, user)
 
                 elif str(reaction.emoji) == "◀️" and cur_page > 1:
                     cur_page -= 1
                     content = contents[cur_page-1]
                     content_w = contents_w[cur_page-1]
-                    await message.edit(embed=discord.Embed(description=f"{content_w}", title=f"{content}"))
+                    await message.edit(embed=discord.Embed(description=f"{content_w} Page {cur_page}/{pages}", title=f"{content}"))
                     await message.remove_reaction(reaction, user)
 
                 else:
