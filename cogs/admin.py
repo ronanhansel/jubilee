@@ -36,7 +36,6 @@ class Admin(commands.Cog):
             if (command[0] == "-c"):
                 colour = command[1]
                 if len(colour) != 6:
-                    await ctx.send(len(colour))
                     await ctx.send('Please specify colour code after -c flag (without #)\n`-create -c "colour" "name"`')
                     await ctx.send('https://preview.redd.it/941j8bdlc6251.png?auto=webp&s=3e5b5c17beaf5c54d0b53c99483f308f8aaad663')
                     return

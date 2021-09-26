@@ -64,7 +64,6 @@ async def playm(ctx, songname):
             except AttributeError:
                 await ctx.send("You have to join a voice channel first")
     except Exception as e:
-        await ctx.send(e)
         await ctx.send('Error, try another keyword or song')
 
 
