@@ -3,7 +3,6 @@ from discord.ext import commands
 import DiscordUtils
 from youtubesearchpython import VideosSearch
 from types import SimpleNamespace
-from data.note import check_table, get_note
 
 music = DiscordUtils.Music()
 
@@ -64,7 +63,8 @@ async def playm(ctx, songname):
                 await playm(ctx=ctx, songname=songname)
             except AttributeError:
                 await ctx.send("You have to join a voice channel first")
-    except Exception:
+    except Exception as e:
+        await ctx.send(e)
         await ctx.send('Error, try another keyword or song')
 
 
