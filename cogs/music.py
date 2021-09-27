@@ -63,7 +63,7 @@ async def playm(ctx, songname):
                 await playm(ctx=ctx, songname=songname)
             except AttributeError:
                 await ctx.send("You have to join a voice channel first")
-    except Exception as e:
+    except Exception:
         await ctx.send('Error, try another keyword or song')
 
 
@@ -161,15 +161,12 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Info of currently playing song")
+    @commands.command(help="Info of currently playing song", aliases=['np'])
     async def now_playing(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            embed = discord.Embed(title=f'Queued **{m.name}**', color=discord.Color.dark_gold(),
-                                              description=f'{m.view} - {m.channel} | {m.duration}\n' + f'Requested by {m.requester}')
-            embed.set_author(name='YouTube')
-            embed.set_thumbnail(url=m.img_url)
-            await ctx.send(embed=embed)
+            now = player.current_queue()[0]
+            await ctx.send(now)
         else:
             await ctx.send("Not playing anything")
 
