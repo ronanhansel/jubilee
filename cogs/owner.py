@@ -37,6 +37,16 @@ class Owner(commands.Cog):
         async for _ in channel.history(limit=None):
             count += 1
         await ctx.send("There were {} messages in {}".format(count, channel.mention))
+    @commands.command()
+    @commands.is_owner()
+    async def server_info(self, ctx):
+        import cpuinfo
+        cpu = cpuinfo.get_cpu_info()
+        s = ""
+        flags = ['python_version', 'arch', 'vendor_id_raw', 'brand_raw', 'hz_actual_friendly', 'family']
+        for a in flags:
+            s += f"{a}: {cpu[a]}\n"
+        await ctx.send(s)
 
 def setup(client):
     client.add_cog(Owner(client))
