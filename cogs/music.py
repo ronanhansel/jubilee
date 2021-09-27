@@ -200,105 +200,83 @@ class Music(commands.Cog):
             await ctx.send("Not playing anything")
 
     @commands.command(help="Return a specified number of search result")
-    async def search(self, ctx, n='none', *, keyword='NULL'):
+    async def search(self, ctx, *, keyword='NULL'):
+        n=10
+        search_q.clear()
+        video_search = VideosSearch(keyword, limit=n)
+        result = SimpleNamespace(**video_search.result()).result
         try:
-            n = int(n)
-            if n > 10:
-                await ctx.send('You can\'t have more than 10 results, that\'s too much for me 🥲')
-            else:
-                search_q.clear()
-                video_search = VideosSearch(keyword, limit=n)
-                result = SimpleNamespace(**video_search.result()).result
+            pages = len(result)
+            cur_page = 1
+            i = 0
+            img = result[i]['thumbnails'][0]['url']
+            title = result[i]['accessibility']['title']
+            view = result[i]['viewCount']['short']
+            dur = result[i]['duration']
+            search_q.append(title)
+            channel_name = result[i]['channel']['name']
+            embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
+                                description=f'{view} - {channel_name} | {dur} Page {i + 1}/{pages}')
+            embed.set_author(name='YouTube')
+            embed.set_thumbnail(url=img)
+            message = await ctx.send(embed=embed)
+            # getting the message object for editing and reacting
+
+            await message.add_reaction("◀️")
+            await message.add_reaction("▶️")
+
+            def check(reaction, user):
+                return user == ctx.author and str(reaction.emoji) in ["◀️", "▶️"]
+                # This makes sure nobody except the command sender can interact with the "menu"
+
+            while True:
                 try:
-                    pages = len(result)
-                    cur_page = 1
-                    i = 0
-                    img = result[i]['thumbnails'][0]['url']
-                    title = result[i]['accessibility']['title']
-                    view = result[i]['viewCount']['short']
-                    dur = result[i]['duration']
-                    search_q.append(title)
-                    channel_name = result[i]['channel']['name']
-                    embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                        description=f'{view} - {channel_name} | {dur} Page {i + 1}/{pages}')
-                    embed.set_author(name='YouTube')
-                    embed.set_thumbnail(url=img)
-                    message = await ctx.send(embed=embed)
-                    # getting the message object for editing and reacting
+                    reaction, user = await self.client.wait_for("reaction_add", timeout=60, check=check)
+                    # waiting for a reaction to be added - times out after x seconds, 60 in this
+                    # example
 
-                    await message.add_reaction("◀️")
-                    await message.add_reaction("▶️")
+                    if str(reaction.emoji) == "▶️" and cur_page != pages:
+                        cur_page += 1
+                        i = cur_page-1
+                        img = result[i]['thumbnails'][0]['url']
+                        title = result[i]['accessibility']['title']
+                        view = result[i]['viewCount']['short']
+                        dur = result[i]['duration']
+                        search_q.append(title)
+                        channel_name = result[i]['channel']['name']
+                        embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
+                                            description=f'{view} - {channel_name} | {dur} Page {i + 1}/{pages}')
+                        embed.set_author(name='YouTube')
+                        embed.set_thumbnail(url=img)
+                        await message.edit(embed=embed)
+                        await message.remove_reaction(reaction, user)
 
-                    def check(reaction, user):
-                        return user == ctx.author and str(reaction.emoji) in ["◀️", "▶️"]
-                        # This makes sure nobody except the command sender can interact with the "menu"
+                    elif str(reaction.emoji) == "◀️" and cur_page > 1:
+                        cur_page -= 1
+                        i = cur_page-1
+                        img = result[i]['thumbnails'][0]['url']
+                        title = result[i]['accessibility']['title']
+                        view = result[i]['viewCount']['short']
+                        dur = result[i]['duration']
+                        search_q.append(title)
+                        channel_name = result[i]['channel']['name']
+                        embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
+                                            description=f'{view} - {channel_name} | {dur} Page {i + 1}/{pages}')
+                        embed.set_author(name='YouTube')
+                        embed.set_thumbnail(url=img)
+                        await message.edit(embed=embed)
+                        await message.remove_reaction(reaction, user)
 
-                    while True:
-                        try:
-                            reaction, user = await self.client.wait_for("reaction_add", timeout=60, check=check)
-                            # waiting for a reaction to be added - times out after x seconds, 60 in this
-                            # example
-
-                            if str(reaction.emoji) == "▶️" and cur_page != pages:
-                                cur_page += 1
-                                i = cur_page-1
-                                img = result[i]['thumbnails'][0]['url']
-                                title = result[i]['accessibility']['title']
-                                view = result[i]['viewCount']['short']
-                                dur = result[i]['duration']
-                                search_q.append(title)
-                                channel_name = result[i]['channel']['name']
-                                embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                                    description=f'{view} - {channel_name} | {dur} Page {i + 1}/{pages}')
-                                embed.set_author(name='YouTube')
-                                embed.set_thumbnail(url=img)
-                                await message.edit(embed=embed)
-                                await message.remove_reaction(reaction, user)
-
-                            elif str(reaction.emoji) == "◀️" and cur_page > 1:
-                                cur_page -= 1
-                                i = cur_page-1
-                                img = result[i]['thumbnails'][0]['url']
-                                title = result[i]['accessibility']['title']
-                                view = result[i]['viewCount']['short']
-                                dur = result[i]['duration']
-                                search_q.append(title)
-                                channel_name = result[i]['channel']['name']
-                                embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                                                    description=f'{view} - {channel_name} | {dur} Page {i + 1}/{pages}')
-                                embed.set_author(name='YouTube')
-                                embed.set_thumbnail(url=img)
-                                await message.edit(embed=embed)
-                                await message.remove_reaction(reaction, user)
-
-                            else:
-                                await message.remove_reaction(reaction, user)
-                                # removes reactions if the user tries to go forward on the last page or
-                                # backwards on the first page
-                        except asyncio.TimeoutError:
-                            await message.delete()
-                            break
-                # ending the loop if user doesn't react after x seconds
-                    # for i in range(0, len(result)):
-                    #     img = result[i]['thumbnails'][0]['url']
-                    #     title = result[i]['accessibility']['title']
-                    #     view = result[i]['viewCount']['short']
-                    #     dur = result[i]['duration']
-                    #     search_q.append(title)
-                    #     channel_name = result[i]['channel']['name']
-                    #     embed = discord.Embed(title=f'**{title[:title.index("by")]}**', color=discord.Color.dark_gold(),
-                    #                         description=f'{view} - {channel_name} | {dur}')
-                    #     embed.set_author(name='YouTube')
-                    #     embed.set_thumbnail(url=img)
-                    #     await ctx.send(embed=embed)
-                except IndexError:
-                    await ctx.send('Error')
-        except ValueError:
-            await ctx.send('You need to specify the `number` of result as in `-search number keyword`')
-
-
-
-
+                    else:
+                        await message.remove_reaction(reaction, user)
+                        # removes reactions if the user tries to go forward on the last page or
+                        # backwards on the first page
+                except asyncio.TimeoutError:
+                    await message.delete()
+                    break
+        # ending the loop if user doesn't react after x seconds
+        except IndexError:
+            await ctx.send('Error')
 
 def setmusic(name, img_url, duration, view, channel, requester, url):
     m.img_url = img_url
