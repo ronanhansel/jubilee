@@ -21,8 +21,7 @@ class Command(commands.Cog):
             data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
             await ctx.send(data["memes"][0]["url"])
         else:
-            key = "+".join(keyword)
-            url = "https://api.memes.com/search/memes?term={}&page=1".format(key)
+            url = "https://api.memes.com/search/memes?term={}&page=1".format(keyword)
             r = requests.get(url=url)
             j = json.loads(r.content)
             path = j['posts'][0]['path']
