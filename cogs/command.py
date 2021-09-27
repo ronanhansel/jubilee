@@ -16,8 +16,8 @@ class Command(commands.Cog):
     # Commands
 
     @commands.command(help="Get entertained by memes on reddit")
-    async def meme(self, ctx, *, keyword):
-        if len(keyword) == 1:
+    async def meme(self, ctx, *, keyword="Null"):
+        if keyword == "Null":
             data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
             await ctx.send(data["memes"][0]["url"])
         else:
