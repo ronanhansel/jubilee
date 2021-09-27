@@ -154,7 +154,10 @@ class Music(commands.Cog):
             for song in player.current_queue():
                 songs += f"{i}. " + song.name + '\n'
                 i += 1
-            await ctx.send(songs)
+            try:
+                await ctx.send(songs)
+            except Exception:
+                await ctx.send("Empty queue")
         else:
             await ctx.send("Not playing anything")
 
