@@ -26,7 +26,7 @@ async def playm(ctx, songname):
         video_search = VideosSearch(songname, limit=1)
         result = SimpleNamespace(**video_search.result()).result
         url = result[0]['link']
-        img = result[0]['thumbnails'][1]['url']
+        img = result[0]['thumbnails'][0]['url']
         title = result[0]['accessibility']['title']
         title = title[:title.index("by")]
         view = result[0]['viewCount']['short']
@@ -189,7 +189,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Remove queued song corresponding to the index")
+    @commands.command(help="Remove queued song corresponding to the index", aliases=['rm'])
     async def remove(self, ctx, index):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -210,7 +210,7 @@ class Music(commands.Cog):
                 result = SimpleNamespace(**video_search.result()).result
                 try:
                     for i in range(0, len(result)):
-                        img = result[i]['thumbnails'][1]['url']
+                        img = result[i]['thumbnails'][0]['url']
                         title = result[i]['accessibility']['title']
                         view = result[i]['viewCount']['short']
                         dur = result[i]['duration']
