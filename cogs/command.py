@@ -16,9 +16,18 @@ class Command(commands.Cog):
     # Commands
 
     @commands.command(help="Get entertained by memes on reddit")
-    async def meme(self, ctx):
-        data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
-        await ctx.send(data["memes"][0]["url"])
+    async def meme(self, ctx, *, keyword):
+        if len(keyword) == 1:
+            data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
+            await ctx.send(data["memes"][0]["url"])
+        else:
+            key = "+".join(keyword)
+            url = "https://api.memes.com/search/memes?term={}&page=1".format(key)
+            r = requests.get(url=url)
+            j = json.loads(r.content)
+            path = j['posts'][0]['path']
+            mem = "https://cdn.memes.com/{}".format(path)
+            await ctx.send(mem)        
 
     @commands.command(help="Flirt!")
     async def flirt(self, ctx):

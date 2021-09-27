@@ -152,7 +152,7 @@ class Music(commands.Cog):
             songs = ''
             i = 0
             for song in player.current_queue():
-                songs += f"{i}. " + song.name + '\n'
+                songs += f"{i + 1}. " + song.name + '\n'
                 i += 1
             try:
                 await ctx.send(songs)
@@ -179,7 +179,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Change the volume of song")
+    @commands.command(help="Change the volume of song", aliases=['vol'])
     async def volume(self, ctx, vol):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -193,7 +193,7 @@ class Music(commands.Cog):
     async def remove(self, ctx, index):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            song = await player.remove_from_queue(int(index))
+            song = await player.remove_from_queue(int(index) - 1)
             await ctx.send(f"Removed {song.name} from queue")
         else:
             await ctx.send("Not playing anything")
