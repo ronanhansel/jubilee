@@ -166,7 +166,7 @@ class Music(commands.Cog):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
             now = player.current_queue()[0]
-            await ctx.send(now)
+            await ctx.send(now.name)
         else:
             await ctx.send("Not playing anything")
 
