@@ -173,9 +173,8 @@ class Music(commands.Cog):
     async def now_playing(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            embed = d_embed(m.name, m.view, m.channel, m.duration, m.requester,
-                            m.img_url, color=discord.Color.green(), command='Now Playing')
-            await ctx.send(embed=embed)
+            now = player.current_queue()[0]
+            await ctx.send(now.name)
         else:
             await ctx.send("Not playing anything")
 
