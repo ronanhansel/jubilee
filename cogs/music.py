@@ -96,7 +96,7 @@ class Music(commands.Cog):
             await ctx.send("I'm not in any channel")
         
 
-    @commands.command(help="Play the first song with specified name on YouTube")
+    @commands.command(help="Play the first song with specified name on YouTube", aliases=["p"])
     async def play(self, ctx, *, songname):
         try:
             n = int(songname)
@@ -125,7 +125,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Stop currently playing song")
+    @commands.command(help="Stop the player")
     async def stop(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -186,19 +186,22 @@ class Music(commands.Cog):
         if player:
             song, volume = await player.change_volume(
                 float(vol) / 100)  # volume should be a float between 0 to 1
-            await ctx.send(f"Changed volume for {song.name} to {volume*100}%")
+            await ctx.send(f"Changed volume for `{song.name}` to {volume*100}%")
         else:
             await ctx.send("Not playing anything")
 
     @commands.command(help="Remove queued song corresponding to the index", aliases=['rm'])
-    async def remove(self, ctx, index):
+    async def remove(self, ctx, *, index):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
             index = index.split(" ")
+            index = sorted(map(int, index))
             songs = ""
+            l = 0
             for i in index:
-                song = await player.remove_from_queue(int(i) - 1)
-                songs += song.name + " "
+                song = await player.remove_from_queue(i - 1 - l)
+                songs += "`" + song.name + "`, "
+                l += 1
             await ctx.send(f"Removed {songs} from queue")
         else:
             await ctx.send("Not playing anything")
