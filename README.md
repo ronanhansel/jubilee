@@ -18,9 +18,7 @@ If the code gets more complicated, I'll make sure I note everything needed here 
 
 install dependencies
 ```
-  >>> pip install discord
-  >>> pip install DiscordUtils[voice]
-  >>> pip install psutil
+  >>> pip install -r requirements.txt
 ```
 See `requirements.txt` for more details
 

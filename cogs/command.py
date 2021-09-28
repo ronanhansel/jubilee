@@ -8,6 +8,7 @@ from discord.ext import commands
 
 note = data.note
 
+
 class Command(commands.Cog):
     "The commands anyone can use"
 
@@ -18,20 +19,22 @@ class Command(commands.Cog):
     @commands.command(help="Get entertained by memes on reddit")
     async def meme(self, ctx, *, keyword="Null"):
         if keyword == "Null":
-            data = requests.get("https://meme-api.herokuapp.com/gimme/1").json()
+            data = requests.get(
+                "https://meme-api.herokuapp.com/gimme/1").json()
             await ctx.send(data["memes"][0]["url"])
         else:
-            url = "https://api.memes.com/search/memes?term={}&page=1".format(keyword)
+            url = "https://api.memes.com/search/memes?term={}&page=1".format(
+                keyword)
             r = requests.get(url=url)
             j = json.loads(r.content)
             path = j['posts'][0]['path']
             mem = "https://cdn.memes.com/{}".format(path)
-            await ctx.send(mem)        
+            await ctx.send(mem)
 
     @commands.command(help="Flirt!")
     async def flirt(self, ctx):
         data = json.load(open("./data/quotes.json"))
-        await ctx.send(data[random.randint(0,len(data) - 1)])
+        await ctx.send(data[random.randint(0, len(data) - 1)])
 
     @commands.command(help="Add note for yourself")
     async def note(self, ctx, key, *, val):
@@ -57,15 +60,16 @@ class Command(commands.Cog):
         _id = "_" + str(ctx.message.author.id)
         _prefix = ">"
         try:
-            line = "Soooo, here are the notes I remember, to use them, type '{}key': \n".format(_prefix)
+            line = "Soooo, here are the notes I remember, to use them, type '{}key': \n".format(
+                _prefix)
             keys = [i[0] for i in note.get_note_all(_id)]
             if len(keys) >= 1:
-              for i in sorted(keys):
-                  line += '\t' + _prefix + i
-                  line += '\n'
-              await ctx.send(line)
+                for i in sorted(keys):
+                    line += '\t' + _prefix + i
+                    line += '\n'
+                await ctx.send(line)
             else:
-              await ctx.send('Empty note')
+                await ctx.send('Empty note')
         except Exception:
             await ctx.send('Empty note')
 
@@ -96,6 +100,7 @@ class Command(commands.Cog):
     async def ping(self, ctx, member: discord.User, *, word):
         await member.send(f'{ctx.author} pinged you: {word}')
         await ctx.send('Pinged, I\'m annoying')
+
     @commands.command(help="Search the Wikipedia for your answer", aliases=["wiki"])
     async def wikipedia(self, ctx, *, word):
         S = requests.Session()
@@ -162,9 +167,11 @@ class Command(commands.Cog):
                 await message.delete()
                 break
                 # ending the loop if user doesn't react after x seconds
+
     @commands.command(help="Urban dictionary, very needed")
     async def define(self, ctx, *, word):
-        r = requests.get(f"https://api.urbandictionary.com/v0/define?term=\"{word}\"")
+        r = requests.get(
+            f"https://api.urbandictionary.com/v0/define?term=\"{word}\"")
         l = json.loads(r.text)
         contents = []
         contents_w = []
@@ -173,7 +180,8 @@ class Command(commands.Cog):
             w = d['word']
             defi = d['definition']
             ex = d['example']
-            contents_w.append(f"*{defi}*\n \n{ex} \n \"Source: Urban Dictionary\"")
+            contents_w.append(
+                f"*{defi}*\n \n{ex} \n \"Source: Urban Dictionary\"")
             contents.append(f"{w}")
         pages = len(l['list'])
         cur_page = 1
@@ -219,8 +227,11 @@ class Command(commands.Cog):
                 # ending the loop if user doesn't react after x seconds
 
 # Functions
+
+
 async def dl(self, ctx, val):
     await ctx.channel.purge(limit=val+1)
+
 
 def setup(client):
     client.add_cog(Command(client))

@@ -5,6 +5,7 @@ import os
 client = commands.Bot(command_prefix="-")
 client.remove_command('help')
 
+
 @client.command(hidden=True)
 @commands.is_owner()
 async def load(ctx, extension):
