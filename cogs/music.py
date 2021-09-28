@@ -146,7 +146,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Show queued songs")
+    @commands.command(help="Show queued songs", aliases=["q"])
     async def queue(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -194,13 +194,17 @@ class Music(commands.Cog):
     async def remove(self, ctx, index):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            song = await player.remove_from_queue(int(index) - 1)
-            await ctx.send(f"Removed {song.name} from queue")
+            index = index.split(" ")
+            songs = ""
+            for i in index:
+                song = await player.remove_from_queue(int(i) - 1)
+                songs += song.name + " "
+            await ctx.send(f"Removed {songs} from queue")
         else:
             await ctx.send("Not playing anything")
 
     @commands.command(help="Return a specified number of search result")
-    async def search(self, ctx, *, keyword='NULL'):
+    async def song(self, ctx, *, keyword='NULL'):
         n=10
         search_q.clear()
         video_search = VideosSearch(keyword, limit=n)

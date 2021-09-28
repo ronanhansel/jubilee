@@ -96,6 +96,72 @@ class Command(commands.Cog):
     async def ping(self, ctx, member: discord.User, *, word):
         await member.send(f'{ctx.author} pinged you: {word}')
         await ctx.send('Pinged, I\'m annoying')
+    @commands.command(help="Search the Wikipedia for your answer", aliases=["wiki"])
+    async def wikipedia(self, ctx, *, word):
+        S = requests.Session()
+
+        URL = "https://en.wikipedia.org/w/api.php"
+
+        SEARCHPAGE = word
+
+        PARAMS = {
+            "action": "query",
+            "format": "json",
+            "list": "search",
+            "srsearch": SEARCHPAGE
+        }
+
+        R = S.get(url=URL, params=PARAMS)
+        DATA = R.json()['query']['search']
+        links = []
+        names = []
+        for i in range(0, len(DATA)):
+            name = DATA[i]['title']
+            path = name.replace(" ", "_")
+            names.append(name)
+            links.append("https://en.wikipedia.org/wiki/{}".format(path))
+        pages = len(DATA)
+        cur_page = 1
+        title = names[cur_page-1]
+        link = links[cur_page-1]
+        message = await ctx.send("Page {}/{}\n**{}**\n{}".format(cur_page, pages, title, link))
+        # getting the message object for editing and reacting
+
+        await message.add_reaction("◀️")
+        await message.add_reaction("▶️")
+
+        def check(reaction, user):
+            return user == ctx.author and str(reaction.emoji) in ["◀️", "▶️"]
+            # This makes sure nobody except the command sender can interact with the "menu"
+
+        while True:
+            try:
+                reaction, user = await self.client.wait_for("reaction_add", timeout=60, check=check)
+                # waiting for a reaction to be added - times out after x seconds, 60 in this
+                # example
+
+                if str(reaction.emoji) == "▶️" and cur_page != pages:
+                    cur_page += 1
+                    title = names[cur_page-1]
+                    link = links[cur_page-1]
+                    await message.edit(content="Page {}/{}\n**{}**\n{}".format(cur_page, pages, title, link))
+                    await message.remove_reaction(reaction, user)
+
+                elif str(reaction.emoji) == "◀️" and cur_page > 1:
+                    cur_page -= 1
+                    title = names[cur_page-1]
+                    link = links[cur_page-1]
+                    await message.edit(content="Page {}/{}\n**{}**\n{}".format(cur_page, pages, title, link))
+                    await message.remove_reaction(reaction, user)
+
+                else:
+                    await message.remove_reaction(reaction, user)
+                    # removes reactions if the user tries to go forward on the last page or
+                    # backwards on the first page
+            except asyncio.TimeoutError:
+                await message.delete()
+                break
+                # ending the loop if user doesn't react after x seconds
     @commands.command(help="Urban dictionary, very needed")
     async def define(self, ctx, *, word):
         r = requests.get(f"https://api.urbandictionary.com/v0/define?term=\"{word}\"")
