@@ -170,23 +170,27 @@ class Command(commands.Cog):
 
     @commands.command(help="Urban dictionary, very needed")
     async def define(self, ctx, *, word):
-        r = requests.get(
-            f"https://api.urbandictionary.com/v0/define?term=\"{word}\"")
-        l = json.loads(r.text)
-        contents = []
-        contents_w = []
-        for a in range(0, len(l['list'])):
-            d = l['list'][a]
-            w = d['word']
-            defi = d['definition']
-            ex = d['example']
-            contents_w.append(
-                f"*{defi}*\n \n{ex} \n \"Source: Urban Dictionary\"")
-            contents.append(f"{w}")
-        pages = len(l['list'])
-        cur_page = 1
-        content = contents[cur_page-1]
-        content_w = contents_w[cur_page-1]
+        try:
+            r = requests.get(
+                f"https://api.urbandictionary.com/v0/define?term=\"{word}\"")
+            l = json.loads(r.text)
+            contents = []
+            contents_w = []
+            for a in range(0, len(l['list'])):
+                d = l['list'][a]
+                w = d['word']
+                defi = d['definition']
+                ex = d['example']
+                contents_w.append(
+                    f"*{defi}*\n \n{ex} \n \"Source: Urban Dictionary\"")
+                contents.append(f"{w}")
+            pages = len(l['list'])
+            cur_page = 1
+            content = contents[cur_page-1]
+            content_w = contents_w[cur_page-1]
+        except IndexError:
+            await ctx.send('I can\'t find that definition, try another keyword plz.')
+            return
         message = await ctx.send(embed=discord.Embed(description=f"{content_w} Page {cur_page}/{pages}", title=f"{content}"))
         # getting the message object for editing and reacting
 
