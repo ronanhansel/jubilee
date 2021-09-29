@@ -181,7 +181,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("Not playing anything")
 
-    @commands.command(help="Skip currently playing song")
+    @commands.command(help="Skip currently playing song", aliases=["sk"])
     async def skip(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
@@ -204,15 +204,9 @@ class Music(commands.Cog):
     async def remove(self, ctx, *, index):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            index = index.split(" ")
-            index = sorted(map(int, index))
-            songs = ""
-            l = 0
-            for i in index:
-                song = await player.remove_from_queue(i - 1 - l)
-                songs += "\n•" + song.name
-                l += 1
-            await ctx.send(f"Removed {songs}\n from queue")
+            index = int(index)
+            song = await player.remove_from_queue(index - 1)
+            await ctx.send(f"Removed {song.name}\n from queue")
         else:
             await ctx.send("Not playing anything")
 
