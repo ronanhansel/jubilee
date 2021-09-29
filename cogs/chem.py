@@ -7,18 +7,20 @@ class Chem(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
+    @commands.command(help="Balancing the chemstry equations")
     async def balance(self, ctx, *, eq):
         eq = eq.split("=")
         import re
         from sympy import Matrix, lcm
         elementList = []
         elementMatrix = []
-        reactants = eq[0]
-        products = eq[1]
-        reactants = reactants.replace(' ', '').split("+")
-        products = products.replace(' ', '').split("+")
-
+        try:
+            reactants = eq[0]
+            products = eq[1]
+            reactants = reactants.replace(' ', '').split("+")
+            products = products.replace(' ', '').split("+")
+        except IndexError:
+            await ctx.send('Please try again with the correct format, eg: Cu + HNO3 = Cu(NO3)2 + NO + H2O')
 
         def addToMatrix(element, index, count, side):
             if(index == len(elementMatrix)):
@@ -32,7 +34,6 @@ class Chem(commands.Cog):
             column = elementList.index(element)
             elementMatrix[index][column] += count*side
 
-
         def findElements(segment, index, multiplier, side):
             elementsAndNumbers = re.split('([A-Z][a-z]?)', segment)
             i = 0
@@ -44,8 +45,8 @@ class Chem(commands.Cog):
                         addToMatrix(elementsAndNumbers[i], index, count, side)
                         i += 1
                     else:
-                        addToMatrix(elementsAndNumbers[i], index, multiplier, side)
-
+                        addToMatrix(
+                            elementsAndNumbers[i], index, multiplier, side)
 
         def compoundDecipher(compound, index, side):
             segments = re.split('(\([A-Za-z0-9]*\)[0-9]*)', compound)
@@ -57,7 +58,6 @@ class Chem(commands.Cog):
                 else:
                     multiplier = 1
                 findElements(segment, index, multiplier, side)
-
 
         for i in range(len(reactants)):
             compoundDecipher(reactants[i], i, 1)
@@ -80,7 +80,6 @@ class Chem(commands.Cog):
             if i < len(products)-1:
                 output += " + "
         await ctx.send(output)
-
 
 
 def setup(client):
