@@ -4,11 +4,13 @@ import data.note
 
 note = data.note
 
+
 class Admin(commands.Cog):
     "Admin-permitted commands"
 
     def __init__(self, client):
         self.client = client
+
     @commands.command(help="Give someone a role")
     @commands.has_permissions(administrator=True)
     async def promote(self, ctx, member: discord.Member, *, name):
@@ -73,7 +75,6 @@ class Admin(commands.Cog):
         await ctx.channel.purge(limit=val+1)
         if not silence:
             await ctx.send(f'Purged {val} message(s)')
-
 
 
 def setup(client):

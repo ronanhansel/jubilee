@@ -21,6 +21,7 @@ class Chem(commands.Cog):
             products = products.replace(' ', '').split("+")
         except IndexError:
             await ctx.send('Please try again with the correct format, eg: Cu + HNO3 = Cu(NO3)2 + NO + H2O')
+            return
 
         def addToMatrix(element, index, count, side):
             if(index == len(elementMatrix)):
