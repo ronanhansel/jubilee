@@ -173,8 +173,11 @@ class Music(commands.Cog):
     async def now_playing(self, ctx):
         player = music.get_player(guild_id=ctx.guild.id)
         if player:
-            now = player.current_queue()[0]
-            await ctx.send(now.name)
+            try:
+                now = player.current_queue()[0]
+                await ctx.send(now.name)
+            except Exception:
+                await ctx.send("Not playing anything")
         else:
             await ctx.send("Not playing anything")
 
