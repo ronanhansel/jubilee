@@ -206,7 +206,7 @@ class Music(commands.Cog):
         if player:
             index = int(index)
             song = await player.remove_from_queue(index - 1)
-            await ctx.send(f"Removed {song.name}\n from queue")
+            await ctx.send(f"Removed {song.name} from queue")
         else:
             await ctx.send("Not playing anything")
 

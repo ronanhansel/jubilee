@@ -33,7 +33,7 @@ class Command(commands.Cog):
 
     @commands.command(help="Flirt!")
     async def flirt(self, ctx):
-        data = json.load(open("./data/quotes.json"))
+        data = json.load(open("./data/flirt_quotes.json"))
         await ctx.send(data[random.randint(0, len(data) - 1)])
 
     @commands.command(help="Add note for yourself")
