@@ -35,7 +35,7 @@ class Help(commands.Cog):
 
         prefix = '-'
         version = '5.5'
-        hidden = ['Owner', 'Help', 'Listen']
+        hidden = ['Owner', 'Help', 'Listen', '_2048']
 
         # setting owner name - if you don't wanna be mentioned remove line 49-60 and adjust help text (line 88)
         owner = "RonanHansel#0059"
