@@ -23,13 +23,16 @@ class Command(commands.Cog):
                 "https://meme-api.herokuapp.com/gimme/1").json()
             await ctx.send(data["memes"][0]["url"])
         else:
-            url = "https://api.memes.com/search/memes?term={}&page=1".format(
-                keyword)
-            r = requests.get(url=url)
-            j = json.loads(r.content)
-            path = j['posts'][0]['path']
-            mem = "https://cdn.memes.com/{}".format(path)
-            await ctx.send(mem)
+            try:
+                url = "https://api.memes.com/search/memes?term={}&page=1".format(
+                    keyword)
+                r = requests.get(url=url)
+                j = json.loads(r.content)
+                path = j['posts'][0]['path']
+                mem = "https://cdn.memes.com/{}".format(path)
+                await ctx.send(mem)
+            except IndexError:
+                await ctx.send("Hmmm can't find any...")
 
     @commands.command(help="Flirt!")
     async def flirt(self, ctx):
