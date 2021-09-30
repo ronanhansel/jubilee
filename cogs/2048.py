@@ -5,7 +5,7 @@ from random import randint
 from discord.ext import commands
 
 # If smoother is specified in the config file, it awaits before sending the new random tile, making it slightly more smoothe
-smoother = 'true'
+smoother = True
 
 numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
@@ -163,15 +163,13 @@ class _2048(commands.Cog):
                     found = True
                     start_array[first_2][second_2] = randint(1, 2) * 2
 
-            #start_array[randint(0, 3)][randint(0, 3)] = randint(1, 90) * 2
-
             string, string2 = self.array_to_string(start_array, message.author.mention)
 
             e.add_field(name="Try to get the 2048 tile!", value=string2)
             e.set_footer(text=base91.encode(bytes(string, 'utf-8')))
 
             new_msg = await message.channel.send(embed=e)
-            print(start_array)
+            # print(start_array)
             # Add control reactions
             for emoji in ['⬆', '⬇','⬅','➡']:
                 await new_msg.add_reaction(emoji)
@@ -184,7 +182,7 @@ class _2048(commands.Cog):
             return
 
         # Just to show in the console which reaction is being sent
-        print(reaction)
+        # print(reaction)
 
         # If the message that was reacted on was one sent by the bot, guaranteeing it's a game
         if reaction.message.author == self.client.user:
@@ -308,7 +306,7 @@ class _2048(commands.Cog):
 
                         string, string2 = self.array_to_string(output2, user.mention)
 
-                        print(string)
+                        # print(string)
 
                         e.add_field(name="Try to get the 2048 tile!", value=string2)
                         e.set_footer(text=base91.encode(bytes(string, 'utf-8')))
@@ -316,7 +314,7 @@ class _2048(commands.Cog):
 
                         # Check if there are valid moves and if not, end the game
                         if self.check_valid(output2) is False:
-                            print("end")
+                            # print("end")
                             # If there are no 0's, check if there are any valid moves. If there aren't, say the game is over.
                             e = discord.Embed()
                             e.add_field(name="%s is unable to make any more moves." % user, value=":cry:")
@@ -344,7 +342,7 @@ class _2048(commands.Cog):
                             e.set_footer(text=base91.encode(bytes(string, 'utf-8')))
                             await reaction.message.edit(embed=e)
                     elif self.check_valid(output2) is False:
-                        print("end")
+                        # print("end")
                         # If there are no 0's, check if there are any valid moves. If there aren't, say the game is over.
                         e = discord.Embed()
                         e.add_field(name="%s is unable to make any more moves." % user, value=":cry:")
@@ -355,11 +353,11 @@ class _2048(commands.Cog):
                             await reaction.message.remove_reaction(emoji=emoji, member=self.client.user)
                         await reaction.message.add_reaction('🇽')
                     else:
-                        print("else")
+                        # print("else")
                         # They made a valid move, but it didn't change anything, so don't add a new tile
                         string, string2 = self.array_to_string(output2, user.mention)
 
-                        print(string)
+                        # print(string)
 
                         e.add_field(name="Try to get the 2048 tile!", value=string2)
                         e.set_footer(text=base91.encode(bytes(string, 'utf-8')))
