@@ -142,7 +142,7 @@ class _2048(commands.Cog):
         if message.author == self.client.user:
             return
 
-        if message.content.startswith('!start'):
+        if message.content.startswith('!2048'):
             # To show who's game it is (no one else can play the game than this person)
             e = discord.Embed(title="%s's Game!" % message.author)
 
