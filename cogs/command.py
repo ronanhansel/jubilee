@@ -170,8 +170,8 @@ class Command(commands.Cog):
                 await message.delete()
                 break
                 # ending the loop if user doesn't react after x seconds
-    @commands.command(help="Get entertained by memes on reddit")
-    async def meme(self, ctx, *, equation):
+    @commands.command(help="Get entertained by memes on reddit", aliases=["eval", "ev"])
+    async def _eval(self, ctx, *, equation):
         try:
             await ctx.send(eval(equation))
         except Exception:
