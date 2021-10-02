@@ -32,10 +32,11 @@ class Listen(commands.Cog):
             for a in json.load(open("./data/filtered_words.json")):
                 if i.lower() == a:
                     muted = True
+                    i = a
                     time_warns += 10
         
         if muted:
-            message.delete(message)
+            await message.delete()
             member = message.author
             role = discord.utils.get(message.guild.roles, name='member')
             if role:
