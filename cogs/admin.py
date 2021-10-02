@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import data.note
+import asyncio
 
 note = data.note
 
@@ -75,6 +76,12 @@ class Admin(commands.Cog):
         await ctx.channel.purge(limit=val+1)
         if not silence:
             await ctx.send(f'Purged {val} message(s)')
+    @commands.command(help="Be SPAMMY but you don't have to pay for it")
+    @commands.has_permissions(administrator=True)
+    async def spam(self, ctx, times, *, message):
+        for i in range(0, int(times)):
+            await ctx.send(message)
+            await asyncio.sleep(1)
     @commands.command(help="Give someone a role")
     @commands.has_permissions(administrator=True)
     async def mute(self, ctx, member: discord.Member):
