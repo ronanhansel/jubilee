@@ -191,7 +191,10 @@ class _2048(commands.Cog):
                 await self.delete_game(reaction)
             else:
                 # decode footer from base91
-                footer = base91.decode(reaction.message.embeds[0].footer.text).decode("utf-8")
+                try:
+                    footer = base91.decode(reaction.message.embeds[0].footer.text).decode("utf-8")
+                except Exception:
+                    return
                 output, user2 = self.string_to_array(footer)
 
                 # if the user is the same one that started the game
@@ -271,7 +274,7 @@ class _2048(commands.Cog):
 
                     output2 = output3
 
-                    e = discord.Embed(title="%s's Game!" % user)
+                    e = discord.Embed()
 
                     # Undo the rotations from before
                     if reaction.emoji == '⬅':
