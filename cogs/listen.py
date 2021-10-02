@@ -20,6 +20,7 @@ class Listen(commands.Cog):
         _id = "_" + str(message.author.id)
         msg = message.content
         time_warns = 0
+        muted = False
         if message.author == self.client.user:
             return
         if msg.startswith('>'):
@@ -28,16 +29,20 @@ class Listen(commands.Cog):
             except Exception:
                 await message.channel.send('Welp no such note, try `-notes` to see all available keys')
         for i in msg.split():
-            for a in json.load(open("./data/no_say_words.json")):
+            for a in json.load(open("./data/filtered_words.json")):
                 if i.lower() == a:
+                    muted = True
                     time_warns += 10
-        member = message.author
-        role = discord.utils.get(message.guild.roles, name='member')
-        if role:
-            await member.remove_roles(role)
-            await message.channel.send(f"Muted {member} for {time_warns} seconds for saying `{i}`")
-            await asyncio.sleep(time_warns)
-            await member.add_roles(role)
+        
+        if muted:
+            message.delete(message)
+            member = message.author
+            role = discord.utils.get(message.guild.roles, name='member')
+            if role:
+                await member.remove_roles(role)
+                await message.channel.send(f"Muted {member} for {time_warns} seconds for saying `{i}`")
+                await asyncio.sleep(time_warns)
+                await member.add_roles(role)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
