@@ -33,7 +33,7 @@ class Listen(commands.Cog):
                 if i.lower() == a:
                     muted = True
                     i = a
-                    time_warns += 10
+                    time_warns += 1
         
         if muted:
             await message.delete()
@@ -41,8 +41,8 @@ class Listen(commands.Cog):
             role = discord.utils.get(message.guild.roles, name='member')
             if role:
                 await member.remove_roles(role)
-                await message.channel.send(f"Muted {member} for {time_warns} seconds for saying `{i}`")
-                await asyncio.sleep(time_warns)
+                await message.channel.send(f"Muted {member} for {time_warns} minutes for saying `{i}`")
+                await asyncio.sleep(time_warns*60)
                 await member.add_roles(role)
 
     @commands.Cog.listener()
