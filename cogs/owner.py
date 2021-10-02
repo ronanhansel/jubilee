@@ -55,7 +55,7 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def repeat(self, ctx, times, *, message):
+    async def spam(self, ctx, times, *, message):
         for i in range(0, int(times)):
             await ctx.send(message)
             await asyncio.sleep(1)
