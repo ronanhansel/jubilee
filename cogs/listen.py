@@ -25,8 +25,6 @@ class Listen(commands.Cog):
                 await message.channel.send(get_note(_id, msg[1:])[1])
             except Exception:
                 await message.channel.send('Welp no such note, try `-notes` to see all available keys')
-        if message.mentions and (self.client.get_user(self.client.user.id) == message.mentions[0]):
-            await message.channel.send("I\'m awake!")
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

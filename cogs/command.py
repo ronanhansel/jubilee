@@ -29,7 +29,8 @@ class Command(commands.Cog):
                     keyword)
                 r = requests.get(url=url)
                 j = json.loads(r.content)
-                path = j['posts'][random.randint(0, len(j['posts']) - 1)]['path']
+                path = j['posts'][random.randint(
+                    0, len(j['posts']) - 1)]['path']
                 mem = "https://cdn.memes.com/{}".format(path)
                 await ctx.send(mem)
             except IndexError:
@@ -104,7 +105,8 @@ class Command(commands.Cog):
     async def ping(self, ctx, member: discord.User, *, word):
         await member.send(f'{ctx.author} pinged you: {word}')
         await ctx.send('Pinged, I\'m annoying')
-    @commands.command(help="Search the Wikipedia for your answer", aliases=["gg"])
+
+    @commands.command(help="Search the Internet", aliases=["gg"])
     async def google(self, ctx, *, query):
         links = list(search(query, tld="co.in", num=10, stop=10, pause=2))
         pages = len(links)
@@ -146,6 +148,28 @@ class Command(commands.Cog):
                 await message.delete()
                 break
                 # ending the loop if user doesn't react after x seconds
+
+    @commands.command(help="Show the last message sent by user", aliases=["lsm"])
+    async def lastmessage(self, ctx, user="null"):
+        if user == "null":
+            user_id = 874504833938386975
+        else:
+            user_id = int(''.join(c for c in user if c.isdigit()))
+        oldestMessage = None
+        for channel in ctx.guild.text_channels:
+            fetchMessage = await channel.history().find(lambda m: m.author.id == user_id)
+            if fetchMessage is None:
+                continue
+            if oldestMessage is None:
+                oldestMessage = fetchMessage
+            else:
+                if fetchMessage.created_at > oldestMessage.created_at:
+                    oldestMessage = fetchMessage
+        if (oldestMessage is not None):
+            await ctx.send(oldestMessage.content)
+        else:
+            await ctx.send("No message found.")
+
     @commands.command(help="Search the Wikipedia for your answer", aliases=["wiki"])
     async def wikipedia(self, ctx, *, word):
         S = requests.Session()
@@ -212,12 +236,14 @@ class Command(commands.Cog):
                 await message.delete()
                 break
                 # ending the loop if user doesn't react after x seconds
-    @commands.command(help="Get entertained by memes on reddit", aliases=["eval", "ev"])
+
+    @commands.command(help="Make calculations", aliases=["eval", "ev"])
     async def _eval(self, ctx, *, equation):
         try:
             await ctx.send(eval(equation))
         except Exception:
             await ctx.send("Please try again")
+
     @commands.command(help="Urban dictionary, very needed")
     async def define(self, ctx, *, word):
         try:
