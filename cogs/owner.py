@@ -1,5 +1,6 @@
 from discord.ext import commands
 import data.note
+import asyncio
 import psutil
 import math
 import discord
@@ -51,6 +52,13 @@ class Owner(commands.Cog):
         for a in flags:
             s += f"{a}: {cpu[a]}\n"
         await ctx.send(s)
+
+    @commands.command()
+    @commands.is_owner()
+    async def repeat(self, ctx, times, *, message):
+        for i in range(0, int(times)):
+            await ctx.send(message)
+            await asyncio.sleep(1)
 
 
 def setup(client):
