@@ -28,7 +28,7 @@ class Command(commands.Cog):
                     keyword)
                 r = requests.get(url=url)
                 j = json.loads(r.content)
-                path = j['posts'][0]['path']
+                path = j['posts'][random.randint(0, len(j['posts']) - 1)]['path']
                 mem = "https://cdn.memes.com/{}".format(path)
                 await ctx.send(mem)
             except IndexError:
@@ -170,7 +170,12 @@ class Command(commands.Cog):
                 await message.delete()
                 break
                 # ending the loop if user doesn't react after x seconds
-
+    @commands.command(help="Get entertained by memes on reddit")
+    async def meme(self, ctx, *, equation):
+        try:
+            await ctx.send(eval(equation))
+        except Exception:
+            await ctx.send("Please try again")
     @commands.command(help="Urban dictionary, very needed")
     async def define(self, ctx, *, word):
         try:

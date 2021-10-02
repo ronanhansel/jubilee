@@ -144,8 +144,8 @@ class _2048(commands.Cog):
 
         if message.content.startswith('!2048'):
             # To show who's game it is (no one else can play the game than this person)
-            e = discord.Embed(title="%s's Game!" % message.author)
-
+            await message.channel.send("{}'s Game".format(message.author))
+            e = discord.Embed()
             # Generate Random Game Board
             start_array = np.zeros(shape=(4, 4))
 
