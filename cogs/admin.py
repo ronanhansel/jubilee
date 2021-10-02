@@ -82,7 +82,7 @@ class Admin(commands.Cog):
         for i in range(0, int(times)):
             await ctx.send(message)
             await asyncio.sleep(1)
-    @commands.command(help="Give someone a role")
+    @commands.command(help="Mute annoying members")
     @commands.has_permissions(administrator=True)
     async def mute(self, ctx, member: discord.Member):
         role = discord.utils.get(ctx.guild.roles, name='member')
@@ -93,7 +93,7 @@ class Admin(commands.Cog):
             await ctx.send("The role `member` which allow texting does not exist, I've just created it, please remove `@everyone`'s permission to text, and only those with `member`")
             guild = ctx.guild
             await guild.create_role(name="member")
-    @commands.command(help="Give someone a role")
+    @commands.command(help="Unmute someone")
     @commands.has_permissions(administrator=True)
     async def unmute(self, ctx, member: discord.Member):
         role = discord.utils.get(ctx.guild.roles, name='member')
