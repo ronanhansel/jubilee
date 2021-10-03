@@ -41,7 +41,7 @@ class Listen(commands.Cog):
             member = message.author
             await message.delete()
             muted.append(member.id)
-            json.dump(muted, open("./data/muted.json"))
+            json.dump(muted, open("./data/muted.json", "w"))
             await message.channel.send(f"Muted {member} for {time_warns} minutes for saying a bad word")
             await asyncio.sleep(time_warns*60)
             muted.remove(member.id)
