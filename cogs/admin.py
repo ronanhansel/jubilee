@@ -88,6 +88,9 @@ class Admin(commands.Cog):
     async def mute(self, message, member: discord.Member):
         if member.permissions_in(message.channel).administrator:
             await message.channel.send("Sorry, I can't mute admins")
+            return
+        if member.id in muted:
+            await message.channel.send("User is already muted")
         else:
             muted.append(member.id)
             await message.channel.send(f"Muted {member}")
