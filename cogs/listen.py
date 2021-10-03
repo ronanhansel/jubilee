@@ -50,11 +50,11 @@ class Listen(commands.Cog):
         if censored:
             member = message.author
             await message.delete()
-            muted[serverid].append(member.id)
+            muted[f"{serverid}"].append(member.id)
             json.dump(muted, open("./data/muted.json", "w"))
             await message.channel.send(f"Muted {member} for {time_warns} minutes for saying a bad word")
             await asyncio.sleep(time_warns*60)
-            muted[serverid].remove(member.id)
+            muted[f"{serverid}"].remove(member.id)
             json.dump(muted, open("./data/muted.json", "w"))
 
         if msg.startswith('>'):
