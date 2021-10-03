@@ -64,7 +64,11 @@ class Listen(commands.Cog):
         elif isinstance(error, (commands.MissingRole, commands.MissingAnyRole)):
             await ctx.send('''You aren't authorised buddy!''')
         else:
-            await ctx.send(error)
+            import os
+            if os.getenv('JUBILEE_DEBUG'):
+                await ctx.send(error)
+            else:
+                await ctx.send("I couldn't execute that, please try again with a different command/keyword")
 
 
 def setup(client):
