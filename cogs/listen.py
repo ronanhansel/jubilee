@@ -4,9 +4,6 @@ import json
 from discord.ext import commands
 from data.note import get_note
 
-global muted
-muted = []
-
 class Listen(commands.Cog):
     "Bot listeners"
 
@@ -21,6 +18,7 @@ class Listen(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        muted = json.load(open("./data/muted.json"))
         if message.author == self.client.user:
             return
         if message.author.id in muted:
@@ -39,10 +37,11 @@ class Listen(commands.Cog):
         if censored:
             member = message.author
             await message.delete()
-            muted.append(message.author.id)
+            muted.append(member.id)
+            json.dump(muted, open("./data/muted.json"))
             await message.channel.send(f"Muted {member} for {time_warns} minutes for saying a bad word")
             await asyncio.sleep(time_warns*60)
-            muted.remove(message.author.id)
+            muted.remove(member.id)
 
         if msg.startswith('>'):
             try:

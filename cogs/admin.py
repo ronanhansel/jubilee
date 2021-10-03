@@ -2,10 +2,8 @@ import discord
 from discord.ext import commands
 import data.note
 import asyncio
-from cogs.listen import muted
 
 note = data.note
-
 
 class Admin(commands.Cog):
     "Admin-permitted commands"
@@ -89,10 +87,13 @@ class Admin(commands.Cog):
         # if member.permissions_in(message.channel).administrator:
         #     await message.channel.send("Sorry, I can't mute admins")
         #     return
+        import json
+        muted = json.load(open("./data/muted.json"))
         if member.id in muted:
             await message.channel.send("User is already muted")
         else:
             muted.append(member.id)
+            json.dump(muted, open("./data/muted.json", "w"))
             await message.channel.send(f"Muted {member}")
 
     @commands.command(help="Unmute someone")
