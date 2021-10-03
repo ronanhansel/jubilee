@@ -85,12 +85,12 @@ class Admin(commands.Cog):
             await asyncio.sleep(1)
     @commands.command(help="Mute annoying members")
     @commands.has_permissions(administrator=True)
-    async def mute(self, ctx, member: discord.Member):
-        if ctx.message.author.guild_permissions.administrator:
-            await ctx.send("Sorry, I can't mute admins")
+    async def mute(self, message, member: discord.Member):
+        if member.permissions_in(message.channel).administrator:
+            await message.channel.send("Sorry, I can't mute admins")
         else:
             muted.append(member.id)
-            await ctx.send(f"Muted {member}")
+            await message.channel.send(f"Muted {member}")
 
     @commands.command(help="Unmute someone")
     @commands.has_permissions(administrator=True)
