@@ -1,8 +1,10 @@
 import asyncio
 import discord
+import os
 import json
 from discord.ext import commands
 from data.note import get_note
+
 
 class Listen(commands.Cog):
     "Bot listeners"
@@ -14,24 +16,32 @@ class Listen(commands.Cog):
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening,
                                                                     name="Bee boo peep"))
-        import os
+        if os.getenv('JUBILEE_DEBUG'):
+            print("Debug mode")
         if not os.path.exists("./data/muted.json"):
-            json.dump([], open("./data/muted.json", "x"))
+            json.dump({}, open("./data/muted.json", "x"))
         print('Logged in as {0.user}'. format(self.client))
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        muted = json.load(open("./data/muted.json"))
         if message.author == self.client.user:
             return
-        if message.author.id in muted:
-            await message.delete()
-            return
+
         _id = "_" + str(message.author.id)
         msg = message.content
         time_warns = 0
         censored = False
+        serverid = message.guild.id
+
+        muted = json.load(open("./data/muted.json"))
+        if not f"{serverid}" in muted.keys():
+            muted[f"{serverid}"] = []
+        if message.author.id in muted[f"{serverid}"]:
+            await message.delete()
+            return
+
         filtered = json.load(open("./data/filtered_words.json"))
+
         for f in filtered:
             if f.lower() in msg.lower():
                 censored = True
@@ -40,11 +50,11 @@ class Listen(commands.Cog):
         if censored:
             member = message.author
             await message.delete()
-            muted.append(member.id)
+            muted[serverid].append(member.id)
             json.dump(muted, open("./data/muted.json", "w"))
             await message.channel.send(f"Muted {member} for {time_warns} minutes for saying a bad word")
             await asyncio.sleep(time_warns*60)
-            muted.remove(member.id)
+            muted[serverid].remove(member.id)
             json.dump(muted, open("./data/muted.json", "w"))
 
         if msg.startswith('>'):

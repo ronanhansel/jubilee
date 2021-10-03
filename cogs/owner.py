@@ -52,6 +52,22 @@ class Owner(commands.Cog):
             s += f"{a}: {cpu[a]}\n"
         await ctx.send(s)
 
+    @commands.command()
+    @commands.is_owner()
+    async def sh(self, ctx, *, command="echo Hello World"):
+        try:
+            from subprocess import Popen, PIPE, STDOUT
+            cmd = command
+            event = Popen(cmd, shell=True, stdin=PIPE,
+                          stdout=PIPE, stderr=STDOUT)
+            output = event.communicate()[0].decode("utf-8")
+            if len(output) <= 1:
+                await ctx.send("Executed")
+            else:
+                await ctx.send(output)
+        except Exception as e:
+            await ctx.send(e)
+
 
 def setup(client):
     client.add_cog(Owner(client))

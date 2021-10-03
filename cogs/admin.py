@@ -84,15 +84,18 @@ class Admin(commands.Cog):
     @commands.command(help="Mute annoying members")
     @commands.has_permissions(administrator=True)
     async def mute(self, message, member: discord.Member):
-        if member.permissions_in(message.channel).administrator:
-            await message.channel.send("Sorry, I can't mute admins")
-            return
+        # if member.permissions_in(message.channel).administrator:
+        #     await message.channel.send("Sorry, I can't mute admins")
+        #     return
         import json
         muted = json.load(open("./data/muted.json"))
-        if member.id in muted:
+        serverid = message.guild.id
+        if not f"{serverid}" in muted.keys():
+            muted[f"{serverid}"] = []
+        if member.id in muted[f"{serverid}"]:
             await message.channel.send("User is already muted")
         else:
-            muted.append(member.id)
+            muted[f"{serverid}"].append(member.id)
             json.dump(muted, open("./data/muted.json", "w"))
             await message.channel.send(f"Muted {member}")
 
@@ -101,8 +104,8 @@ class Admin(commands.Cog):
     async def unmute(self, ctx, member: discord.Member):
         import json
         muted = json.load(open("./data/muted.json"))
-        if member.id in muted:
-            muted.remove(member.id)
+        if member.id in muted[f"{ctx.message.guild.id}"]:
+            muted[f"{ctx.message.guild.id}"].remove(member.id)
             json.dump(muted, open("./data/muted.json", "w"))
             await ctx.send(f"Unmuted {member}")
         else:
