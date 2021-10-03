@@ -99,8 +99,11 @@ class Admin(commands.Cog):
     @commands.command(help="Unmute someone")
     @commands.has_permissions(administrator=True)
     async def unmute(self, ctx, member: discord.Member):
+        import json
+        muted = json.load(open("./data/muted.json"))
         if member.id in muted:
             muted.remove(member.id)
+            json.dump(muted, open("./data/muted.json", "w"))
             await ctx.send(f"Unmuted {member}")
         else:
             await ctx.send("This member is not muted")

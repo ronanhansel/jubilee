@@ -14,6 +14,9 @@ class Listen(commands.Cog):
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening,
                                                                     name="Bee boo peep"))
+        import os
+        if not os.path.exists("./data/muted.json"):
+            json.dump([], open("./data/muted.json", "x"))
         print('Logged in as {0.user}'. format(self.client))
 
     @commands.Cog.listener()
