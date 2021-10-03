@@ -32,7 +32,7 @@ class Listen(commands.Cog):
         censored = False
         filtered = json.load(open("./data/filtered_words.json"))
         for f in filtered:
-            if f.lower() in msg:
+            if f.lower() in msg.lower():
                 censored = True
                 time_warns += 1
 
