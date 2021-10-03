@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import data.note
 import asyncio
+from cogs.listen import muted
 
 note = data.note
 
@@ -85,25 +86,20 @@ class Admin(commands.Cog):
     @commands.command(help="Mute annoying members")
     @commands.has_permissions(administrator=True)
     async def mute(self, ctx, member: discord.Member):
-        role = discord.utils.get(ctx.guild.roles, name='member')
-        if role:
-            await member.remove_roles(role)
-            await ctx.send(f"Muted {member}")
+        if ctx.message.author.guild_permissions.administrator:
+            await ctx.send("Sorry, I can't mute admins")
         else:
-            await ctx.send("The role `member` which allow texting does not exist, I've just created it, please remove `@everyone`'s permission to text, and only those with `member`")
-            guild = ctx.guild
-            await guild.create_role(name="member")
+            muted.append(member.id)
+            await ctx.send(f"Muted {member}")
+
     @commands.command(help="Unmute someone")
     @commands.has_permissions(administrator=True)
     async def unmute(self, ctx, member: discord.Member):
-        role = discord.utils.get(ctx.guild.roles, name='member')
-        if role:
-            await member.add_roles(role)
+        if member.id in muted:
+            muted.remove(member.id)
             await ctx.send(f"Unmuted {member}")
         else:
-            await ctx.send("The role `member` which allow texting does not exist, I've just created it, please remove `@everyone`'s permission to text, and only those with `member`")
-            guild = ctx.guild
-            await guild.create_role(name="member")
+            await ctx.send("This member is not muted")
 
 
 
