@@ -33,7 +33,7 @@ class Command(commands.Cog):
                     0, len(j['posts']) - 1)]['path']
                 mem = "https://cdn.memes.com/{}".format(path)
                 await ctx.send(mem)
-            except IndexError:
+            except Exception:
                 await ctx.send("Hmmm can't find any...")
 
     @commands.command(help="Flirt!")
