@@ -86,9 +86,9 @@ class Admin(commands.Cog):
     @commands.command(help="Mute annoying members")
     @commands.has_permissions(administrator=True)
     async def mute(self, message, member: discord.Member):
-        if member.permissions_in(message.channel).administrator:
-            await message.channel.send("Sorry, I can't mute admins")
-            return
+        # if member.permissions_in(message.channel).administrator:
+        #     await message.channel.send("Sorry, I can't mute admins")
+        #     return
         if member.id in muted:
             await message.channel.send("User is already muted")
         else:
