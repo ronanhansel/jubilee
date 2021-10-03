@@ -4,10 +4,8 @@ import json
 from discord.ext import commands
 from data.note import get_note
 
-
 global muted
 muted = []
-
 
 class Listen(commands.Cog):
     "Bot listeners"
@@ -25,30 +23,26 @@ class Listen(commands.Cog):
     async def on_message(self, message):
         if message.author == self.client.user:
             return
+        if message.author.id in muted:
+            await message.delete()
+            return
         _id = "_" + str(message.author.id)
         msg = message.content
         time_warns = 0
         censored = False
-
-        for i in msg.split():
-            for a in json.load(open("./data/filtered_words.json")):
-                if i.lower() == a:
-                    censored = True
-                    i = a
-                    time_warns += 1
+        filtered = json.load(open("./data/filtered_words.json"))
+        for f in filtered:
+            if f.lower() in msg:
+                censored = True
+                time_warns += 1
 
         if censored:
-            await message.delete()
             member = message.author
-            role = discord.utils.get(message.guild.roles, name='member')
-            if role:
-                await member.remove_roles(role)
-                await message.channel.send(f"Muted {member} for {time_warns} minutes for saying `{i}`")
-                await asyncio.sleep(time_warns*60)
-                await member.add_roles(role)
-                return
-        if message.author.id in muted:
             await message.delete()
+            muted.append(message.author.id)
+            await message.channel.send(f"Muted {member} for {time_warns} minutes for saying a bad word")
+            await asyncio.sleep(time_warns*60)
+            muted.remove(message.author.id)
 
         if msg.startswith('>'):
             try:
