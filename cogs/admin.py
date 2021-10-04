@@ -78,9 +78,12 @@ class Admin(commands.Cog):
     @commands.command(help="Be SPAMMY but you don't have to pay for it")
     @commands.has_permissions(administrator=True)
     async def spam(self, ctx, times, *, message):
-        for i in range(0, int(times)):
-            await ctx.send(message)
-            await asyncio.sleep(1)
+        try:
+            for i in range(0, int(times)):
+                await ctx.send(message)
+                await asyncio.sleep(1)
+        except Exception:
+            await ctx.send('Please specify number of messages')
     @commands.command(help="Mute annoying members")
     @commands.has_permissions(administrator=True)
     async def mute(self, message, member: discord.Member):
