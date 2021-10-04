@@ -18,15 +18,18 @@ class Listen(commands.Cog):
                                                                     name="Bee boo peep"))
         if os.getenv('JUBILEE_DEBUG'):
             print("Debug mode")
-        if not os.path.exists("./data/muted.json"):
-            json.dump({}, open("./data/muted.json", "x"))
+        else:
+            print("Production mode")
+        
         print('Logged in as {0.user}'. format(self.client))
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.client.user:
             return
-
+        if not os.path.exists("./data/muted.json"):
+            json.dump({}, open("./data/muted.json", "x"))
+        
         _id = "_" + str(message.author.id)
         msg = message.content
         time_warns = 0
