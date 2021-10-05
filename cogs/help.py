@@ -34,7 +34,7 @@ class Help(commands.Cog):
         """Shows all modules of that bot"""
 
         prefix = '-'
-        version = '5.9.12'
+        version = '6.0.0'
         hidden = ['Owner', 'Help', 'Listen', '_2048']
 
         # setting owner name - if you don't wanna be mentioned remove line 49-60 and adjust help text (line 88)

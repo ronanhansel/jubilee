@@ -85,7 +85,7 @@ class Command(commands.Cog):
             await ctx.send(key + ' This key does not exist, use command `note` to create note')
         else:
             note.remove_note(_id, key)
-            await ctx.send('Ooops i forgot it')
+            await ctx.send('Note is now forgotten')
 
     @commands.command(help="Make your voice heard")
     async def shout(self, ctx, *, word):
@@ -155,18 +155,18 @@ class Command(commands.Cog):
             user_id = 874504833938386975
         else:
             user_id = int(''.join(c for c in user if c.isdigit()))
-        oldestMessage = None
+        oldestmessage = None
         for channel in ctx.guild.text_channels:
-            fetchMessage = await channel.history().find(lambda m: m.author.id == user_id)
-            if fetchMessage is None:
+            fetchmessage = await channel.history().find(lambda m: m.author.id == user_id)
+            if fetchmessage is None:
                 continue
-            if oldestMessage is None:
-                oldestMessage = fetchMessage
+            if oldestmessage is None:
+                oldestmessage = fetchmessage
             else:
-                if fetchMessage.created_at > oldestMessage.created_at:
-                    oldestMessage = fetchMessage
-        if (oldestMessage is not None):
-            await ctx.send(oldestMessage.content)
+                if fetchmessage.created_at > oldestmessage.created_at:
+                    oldestmessage = fetchmessage
+        if (oldestmessage is not None):
+            await ctx.send(oldestmessage.content)
         else:
             await ctx.send("No message found.")
 
@@ -307,11 +307,6 @@ class Command(commands.Cog):
                 # ending the loop if user doesn't react after x seconds
 
 # Functions
-
-
-async def dl(self, ctx, val):
-    await ctx.channel.purge(limit=val+1)
-
 
 def setup(client):
     client.add_cog(Command(client))
