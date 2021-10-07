@@ -87,7 +87,7 @@ class Command(commands.Cog):
             note.remove_note(_id, key)
             await ctx.send('Note is now forgotten')
 
-    @commands.command(help="Make your voice heard")
+    @commands.command(help="Make your voice heard", aliases=["canigeta"])
     async def shout(self, ctx, *, word):
         msg = word
         e = ''

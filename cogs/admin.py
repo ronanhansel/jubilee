@@ -84,7 +84,7 @@ class Admin(commands.Cog):
                 await asyncio.sleep(1)
         except Exception:
             await ctx.send('Please specify number of messages')
-    @commands.command(help="Mute annoying members")
+    @commands.command(help="Mute annoying members", aliases=["stfu"])
     @commands.has_permissions(administrator=True)
     async def mute(self, message, member: discord.Member):
         if member.permissions_in(message.channel).administrator:
