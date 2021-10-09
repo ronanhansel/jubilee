@@ -96,7 +96,7 @@ class Admin(commands.Cog):
 
         if not muted_role:
             muted_role = await guild.create_role(name="Muted")
-            await muted_role.edit(position=3)
+            await muted_role.edit(position=2)
             for channel in guild.channels:
                 await channel.set_permissions(muted_role, speak=False, send_messages=False, read_message_history=True, read_messages=True)
         embed = discord.Embed(title="Muted", description=f"{member.mention} was muted ", colour=discord.Colour.red())
